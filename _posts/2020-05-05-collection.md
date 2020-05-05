@@ -1,5 +1,6 @@
 ---
 layout: post
+description: Think on these things.
 categories: [Think on these]
 title: Collected Thoughts
 ---
@@ -38,3 +39,20 @@ We are the creatures of limited time and energy. What we choose to make out of t
 
 # The Vicious cycle
 We Sense the world. And then we associate. We then segregate them into good and bad. Any further perception is limited by these associations.
+
+# Discipline
+It takes some effort to stick to a regimen. But it’s the only way to transform oneself. A sense of personal growth seems to be very fundamental for a good life. We all have this longing to expand and grow beyond ourselves. Whatever the means one may choose, discipline is the tool.
+
+# Keep it simple
+Life is simple. Catch yourself, whenever you are trying to make it otherwise. Do not escape reality. Acknowledge your feelings and desires without judgment. Do not hurry. There is no compulsion to reach conclusions. Appreciate uncertainty. We can take better actions under this framework. Forcing reality is a loser’s game. Keep it simple.
+
+# Pay the dues
+Pay attention to your desires and fears. We are complex creatures. Often we are unsure of what we want. It takes deliberate struggle to evade dissatisfaction and boredom. So let it be. Pay the dues.
+
+# Take Charge
+Imagine. Consciously, not impulsively imagine what your ideal life should be like. Imagine freely, the kind of family, the nature of work and the world you would like to live in.Feel it to the bone. Now, do What you should be doing today to move in that direction. You can either live intentionally or succumb to the compulsive desires sold to you. There is always somebody dictating you the norms, selling you their fears and insecurities. Taking charge involves paying enough attention to these superficial desires, so they lose their grip. To connect with your deepest longings, you need to imagine freely and act. The feedback can only come through action. So, it’s better to imagine yourself, take charge and act.
+
+# Anger
+It’s absorbing. But, it damages both the ends. The physical sensations are not pleasurable,often the actor feels more pain than the recipient. A moment’s awareness settles everything down. Somewhere along the line,control is being dropped. It is a fun exercise to actively take note of these situations , and seek to involve in them. To non-judgmentally observe your response. It becomes impossible to be both conscious and angry.
+
+
