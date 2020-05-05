@@ -1,6 +1,5 @@
 ---
 layout: post
-description: A minimal example of using markdown with fastpages.
 categories: [Think on these]
 title: Dissatisfaction
 ---
