@@ -107,7 +107,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      5 min read
+      6 min read
     
 </span></p>
 
@@ -150,8 +150,7 @@ window.onload = wrap_img;
   <div class="post-content e-content" itemprop="articleBody">
     <ul class="section-nav">
 <li class="toc-entry toc-h1"><a href="#Introduction">Introduction </a></li>
-<li class="toc-entry toc-h1"><a href="#Continual-Learning">Continual Learning </a></li>
-<li class="toc-entry toc-h1"><a href="#But,-Why-?">But, Why ? </a>
+<li class="toc-entry toc-h1"><a href="#Continual-Learning">Continual Learning </a>
 <ul>
 <li class="toc-entry toc-h2"><a href="#Approaches">Approaches </a>
 <ul>
@@ -261,9 +260,7 @@ Note : Here 'task' is artificially introduced to represent variation in data dis
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="But,-Why-?">
-<a class="anchor" href="#But,-Why-?" aria-hidden="true"><span class="octicon octicon-link"></span></a>But, Why ?<a class="anchor-link" href="#But,-Why-?"> </a>
-</h1>
+
 </div>
 </div>
 </div>
@@ -271,6 +268,24 @@ Note : Here 'task' is artificially introduced to represent variation in data dis
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Let's consider three scenarios,which will better help us to better parse the existing literature in the field.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>$e^{i\pi} + 1 = 0$</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>
+$$\sum_{i=0}^n i^2 = \frac{(n^2+n)(2n+1)}{6}$$
+</p>
 
 </div>
 </div>
@@ -375,8 +390,8 @@ Note : Here 'task' is artificially introduced to represent variation in data dis
 <p>f<sub>θ</sub>   : A model(neural net) parametrized by $\theta$</p>
 <p>{T<sub>i</sub>} ~ p(T) : Tasks used for meta training</p>
 <p>{T<sub>j</sub>} ~ p(T) : Tasks used for meta testing</p>
-<p>{D<sub>T<sub>i</sub>&lt;/sub&gt;} : Meta-training set&lt;/p&gt;
-<p>{D<sub>T<sub>j</sub>&lt;/sub&gt;} : Meta-testing set&lt;/p&gt;
+<p>{D<sub>$T_i$</sub>} : Meta-training set</p>
+<p>{D<sub>$T_j$</sub>} : Meta-testing set</p>
 <p>{D<sub>T</sub><sup>tr</sup>} : Traning data for task T</p>
 <p>{D<sub>T</sub><sup>test</sup>} : Test data for task T</p>
 <p>L<sub>T<sub>i</sub>&lt;/sub&gt; : Loss or feedback from the sampled task T<sub>i</sub>&lt;/p&gt;
@@ -391,15 +406,47 @@ Note : Here 'task' is artificially introduced to represent variation in data dis
 <p>The intuition is to learn the right set of initial parameters that which upon few gradient steps on a new task,would result in good performance.</p>
 <p>Consider a task T<sub>i</sub> drawn out of task distribution p(T). Now, from this T<sub>i</sub> we can sample training dataset D<sub>i</sub><sup>tr</sup>,the loss/feedback on which is given by L<sub>T<sub>i</sub>&lt;/sub&gt;. This loss is parameterized by f<sub>θ</sub>. Suppose we take few gradient steps on this $\theta$ to give $\phi$. The error on test data set ,D<sub>i</sub><sup>test</sup> sampled from T<sub>i</sub>,acts as training signal to update orginal f<sub>θ</sub>.&lt;/p&gt;
 <p>What makes this process different from traditional training of neural networks is that the gradient is taken over meta-parameters $\phi$ through $\theta$. Consider the case of taking one gradient over L<sub>T<sub>i</sub>&lt;/sub&gt; to arrive at $\phi$.&lt;/p&gt;
-<p>$\phi$<sub>i</sub> = $\theta$ - $\alpha$ $\nabla$<sub>$\theta$</sub> L($\theta$,D<sub>T<sub>i</sub>&lt;/sub&gt;<sup>tr</sup>)&lt;/p&gt;
-<p>$\alpha$ : Learning rate(hyper-parameter)</p>
-<p>Now,the loss on $\phi$<sub>i</sub> (taken on  D<sub>T<sub>i</sub>&lt;/sub&gt;<sup>test</sup>) is backpropagated through $\theta$.&lt;/p&gt;
-<p>min<sub>$\theta$</sub> $\Sigma$ <sub> {T<sub>i</sub>} ~ p(T) &lt;/sub&gt;      L($\phi$<sub>i</sub>,D<sub>T<sub>i</sub>&lt;/sub&gt;<sup>test</sup>) = min<sub>$\theta$</sub> $\Sigma$ <sub> {T<sub>i</sub>} ~ p(T) &lt;/sub&gt;  L($\theta$ - $\alpha$ $\nabla$<sub>$\theta$</sub> L($\theta$,D<sub>T<sub>i</sub>&lt;/sub&gt;<sup>tr</sup>),D<sub>T<sub>i</sub>&lt;/sub&gt;<sup>test</sup>)&lt;/p&gt;
-<p>Note that the meta-optimization is performed over the model parameters $\theta$, whereas the objective is computed using the updated model parameters $\phi$. In effect, the method aims to optimize the model parameters such that one or a small number of gradient steps on a new task will produce maximally effective behavior on that task.</p>
 
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>
+$$ \phi_i  = \theta - \alpha \nabla_\theta \mathscr{L}(\theta,D_{T_i}^{tr})$$
+</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now,the loss on $\phi$<sub>i</sub> (taken on  $ {D_{T_i}^{test}} $ ) is backpropagated through $\theta$.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>
+$$ min_{\theta} \Sigma_{{T_i}\thicksim p(T)} L(\phi_i,D_{T_i}^{test}) = min_{\theta} \Sigma_{{T_i}\thicksim p(T)} \mathscr{L}(\theta - \alpha \nabla_\theta \mathscr{L}(\theta,D_{T_i}^{tr}),D_{T_i}^{test}) $$
+</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>$\alpha : Learning rate(hyper-parameter)$</p>
+<p>Note that the meta-optimization is performed over the model parameters $\theta$, whereas the objective is computed using the updated model parameters $\phi$. In effect, the method aims to optimize the model parameters such that one or a small number of gradient steps on a new task will produce maximally effective behavior on that task.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -412,6 +459,14 @@ Note : Here 'task' is artificially introduced to represent variation in data dis
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Now, We will see how this approach can be applied to <code>Continual learning</code> by just tweaking the problem statement.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>$\mathscr{L}$</p>
 
 </div>
 </div>
@@ -451,6 +506,7 @@ And another <sup id="fnref-2" class="footnote-ref"><a href="#fn-2">2</a></sup>
 <div class="footnotes"><p id="fn-1">1. <a href="https://arxiv.org/abs/1909.08383">arXiv:1909.08383</a>!<a href="#fnref-1" class="footnote footnotes">↩</a></p></div>
 <div class="footnotes"><p id="fn-2">2. <a href="https://arxiv.org/abs/1905.12588">arXiv:1905.12588</a>!<a href="#fnref-2" class="footnote footnotes">↩</a></p></div>
 <div class="footnotes"><p id="fn-3">3. <a href="https://arxiv.org/abs/1703.03400">arXiv:1703.03400</a>!<a href="#fnref-3" class="footnote footnotes">↩</a></p></div>
+<div class="footnotes"><p id="fn-4">4. <a href="https://arxiv.org/abs/1905.12588">arXiv:1905.12588</a>!<a href="#fnref-4" class="footnote footnotes">↩</a></p></div>
 
 </div>
 </div>
@@ -458,7 +514,7 @@ And another <sup id="fnref-2" class="footnote-ref"><a href="#fn-2">2</a></sup>
 &lt;/div&gt;
  
 
-</sub></sub></sub></sub></sub></p></sub></p></sub></p></sub></p></sub></p></sub></p></sub></p></sub></p>
+</sub></p></sub></p></sub></p>
 </div>
 </div></div>
 </div>
