@@ -91,7 +91,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      1 min read
+      5 min read
     
 </span></p>
 
@@ -134,9 +134,22 @@ window.onload = wrap_img;
   <div class="post-content e-content" itemprop="articleBody">
     <ul class="section-nav">
 <li class="toc-entry toc-h1"><a href="#Introduction">Introduction </a></li>
-<li class="toc-entry toc-h1"><a href="#Continual-Learning">Continual Learning </a>
+<li class="toc-entry toc-h1"><a href="#Continual-Learning">Continual Learning </a></li>
+<li class="toc-entry toc-h1"><a href="#But,-Why-?">But, Why ? </a>
 <ul>
-<li class="toc-entry toc-h2"><a href="#Approaches">Approaches </a></li>
+<li class="toc-entry toc-h2"><a href="#Approaches">Approaches </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#1.-Modify-the-Update-Rule">1. Modify the Update Rule </a></li>
+<li class="toc-entry toc-h3"><a href="#4.-Meta-Approaches">4. Meta-Approaches </a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#MODEL-AGNOSTIC-META--LEARNING-(MAML)-<sup id='fnref--3' class='footnote-ref'><a href='#fn--3'>-3</a></sup>">MODEL-AGNOSTIC META- LEARNING (MAML) 3 </a></li>
+<li class="toc-entry toc-h4"><a href="#Notation-:">Notation : </a></li>
+<li class="toc-entry toc-h4"><a href="#PROBLEM-STATEMENT-:">PROBLEM STATEMENT : </a></li>
+<li class="toc-entry toc-h4"><a href="#Method-:">Method : </a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul><!--
@@ -172,16 +185,19 @@ window.onload = wrap_img;
 <h1 id="Continual-Learning">
 <a class="anchor" href="#Continual-Learning" aria-hidden="true"><span class="octicon octicon-link"></span></a>Continual Learning<a class="anchor-link" href="#Continual-Learning"> </a>
 </h1>
-<p>Modern Deep Learning systems,in general, deal exclusively with iid data.If our grand objective is to build General Intelligence,then it is mandatory for a single system to learn multiple tasks. Here , We will start with the general setting of continual learning and then begin to investigate how various features of the problem are solved by current methods.</p>
-<blockquote>
-<p>Note :None of the known methods satisfactorily solve Continual Learning problem in it's General Setting.
-```
-Continual Learning : The General Setting</p>
-</blockquote>
-<p>Optimize a defined loss function under Infinite Stream of Data,without any explicit distinction between tasks.</p>
-<p>Note : Here 'task' is artificially introduced to represent variation in data distribution and even loss function.</p>
-<p>```</p>
-<p>The following are the desirable features of the learning scheme:</p>
+<p>Modern Deep Learning systems,in general, deal exclusively with i.i.d. data. If our grand objective is to build General Intelligence,then it is mandatory for a single system to learn multiple tasks. Here , We will start with the general setting of continual learning and then begin to investigate how various features of the problem are solved by current methods.
+</p>
+<div class="flash">
+    <svg class="octicon octicon-info octicon octicon-info octicon octicon-info octicon octicon-info" viewbox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M6.3 5.69a.942.942 0 01-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 01-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path></svg>
+    <strong>Note: </strong>None of the known methods satisfactorily solve Continual Learning problem in it’s General Setting.
+</div>
+
+<pre><code>Continual Learning : The General Setting
+
+Optimize a defined loss function under Infinite Stream of Data,without any explicit distinction between tasks. 
+
+Note : Here 'task' is artificially introduced to represent variation in data distribution and even loss function.</code></pre>
+<p>The following are some of the desirable features of the learning scheme <sup id="fnref-1" class="footnote-ref"><a href="#fn-1">1</a></sup>:</p>
 <ol>
 <li>
 <p><code>Fixed Memory</code> : Memory requirements cannot grow with each additional task.</p>
@@ -209,6 +225,43 @@ Continual Learning : The General Setting</p>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p></p>
+<div class="flash flash-warn">
+    <svg class="octicon octicon-zap octicon octicon-zap octicon octicon-zap" viewbox="0 0 10 16" version="1.1" width="10" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M10 7H6l3-7-9 9h4l-3 7 9-9z"></path></svg>
+    <strong>Important: </strong>Humans do not exactly operate in the General setting of ’Continual Learning’. We often have local control over the stream of tasks. We decide,apriori the sequence of tasks to perform in order to reach a desired goal. We also assign ourselves tasks(thus access to task labels) in order to optimize our goals. 
+</div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Implicit in the above definition,we expect the learning procedure to learn flexible representations. Traditional machine learning paradigm aims to learn a specifit task - machine translation,Image recognition,Speech synthesis - end to end,often from scratch. This is facilitated by training on large amounts of data,specific to the task.Consider Classical MNIST and CIFAR-10 Datesets,that have propelled progress in Computer vision. Each of these have 60,000 Images split equally between ten classes. This is in sharp contrast to how a human experiences learning. Our learning involves learning large number of classes,with few examples from each class.(say 6000 classes with 10 examples for each). Thus,our learning procedure is optimized for this setting and we are forced to learn concepts and abstractions that let us learn quickly and efficiently with less data. Later in this section,we will see techniques that tries to alleviate this problem in modern neural networks.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="But,-Why-?">
+<a class="anchor" href="#But,-Why-?" aria-hidden="true"><span class="octicon octicon-link"></span></a>But, Why ?<a class="anchor-link" href="#But,-Why-?"> </a>
+</h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's consider three scenarios,which will better help us to better parse the existing literature in the field.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Approaches">
 <a class="anchor" href="#Approaches" aria-hidden="true"><span class="octicon octicon-link"></span></a>Approaches<a class="anchor-link" href="#Approaches"> </a>
 </h2>
@@ -226,9 +279,7 @@ Continual Learning : The General Setting</p>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The approaches taken can be broadly categorized into three groups <sup id="fnref-1" class="footnote-ref"><a href="#fn-1">1</a></sup>:</p>
-<p></p>
-<div class="footnotes"><p id="fn-1">1. <a href="https://arxiv.org/abs/1905.12588">arXiv:1905.12588</a>!<a href="#fnref-1" class="footnote footnotes">↩</a></p></div>
+<p>The approaches taken can be broadly categorized into three groups <sup id="fnref-2" class="footnote-ref"><a href="#fn-2">2</a></sup>:</p>
 <ol>
 <li>
 <p>Modify the Update Rule</p>
@@ -239,7 +290,112 @@ Continual Learning : The General Setting</p>
 <li>
 <p>Use Semi-distributed representations</p>
 </li>
+<li>
+<p>Meta-Approaches</p>
+</li>
 </ol>
+<p>Here we will cover some representative works from each of the above categories.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="1.-Modify-the-Update-Rule">
+<a class="anchor" href="#1.-Modify-the-Update-Rule" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. Modify the Update Rule<a class="anchor-link" href="#1.-Modify-the-Update-Rule"> </a>
+</h3>
+<p>Instead of updating all the weights on a new task, the most important weights are retained.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="4.-Meta-Approaches">
+<a class="anchor" href="#4.-Meta-Approaches" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. Meta-Approaches<a class="anchor-link" href="#4.-Meta-Approaches"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>First, We will try to understand the various incarnations of these approaches and finally conclude with some recent works that try to leverage Meta-Approaches for Continual Learning.</p>
+<p>Meta-Learning is a general paradigm that aims to condition the learning rule itself based on pre-defined properties of the learned representations. This will become clear when we see concrete examples. But,for our task of continual learning, Meta-Approaches offer a way away from hand-engineered approaches to learning-based solutions. Let us explore few foundational works in this field,before we see a concrete example for Continual Learning.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p></p>
+<div class="flash">
+    <svg class="octicon octicon-info octicon octicon-info octicon octicon-info octicon octicon-info octicon octicon-info" viewbox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M6.3 5.69a.942.942 0 01-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 01-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path></svg>
+    <strong>Note: </strong>I will not cover the complete spectrum of Meta-Learning approaches,just enough to appreciate how this paradigm allows for a more flexible approach towards solving Continual Learning. But,for a good strating point check <a href="https://lilianweng.github.io/lil-log/2018/11/30/meta-learning.html">Lil’Log’s Blog</a>
+</div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="MODEL-AGNOSTIC-META--LEARNING-(MAML)-&lt;sup id='fnref--3' class='footnote-ref'&gt;&lt;a href='#fn--3'&gt;-3&lt;/a&gt;&lt;/sup&gt;">
+<a class="anchor" href="#MODEL-AGNOSTIC-META--LEARNING-(MAML)-&lt;sup%20id='fnref--3'%20class='footnote-ref'&gt;&lt;a%20href='#fn--3'&gt;-3&lt;/a&gt;&lt;/sup&gt;" aria-hidden="true"><span class="octicon octicon-link"></span></a>MODEL-AGNOSTIC META- LEARNING (MAML) <sup id="fnref-3" class="footnote-ref"><a href="#fn-3">3</a></sup><a class="anchor-link" href="#MODEL-AGNOSTIC-META--LEARNING-(MAML)-&lt;sup%20id='fnref--3'%20class='footnote-ref'&gt;&lt;a%20href='#fn--3'&gt;-3&lt;/a&gt;&lt;/sup&gt;"> </a>
+</h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Notation-:">
+<a class="anchor" href="#Notation-:" aria-hidden="true"><span class="octicon octicon-link"></span></a>Notation :<a class="anchor-link" href="#Notation-:"> </a>
+</h4>
+<p>T : The task, corresponds to the objective or loss function,domain,environment.</p>
+<p>p(T): The distribution of tasks from which a new task is sampled.</p>
+<p>f<sub>θ</sub>   : A model(neural net) parametrized by $\theta$</p>
+<p>{T<sub>i</sub>} ~ p(T) : Tasks used for meta training</p>
+<p>{T<sub>j</sub>} ~ p(T) : Tasks used for meta testing</p>
+<p>{D<sub>T<sub>i</sub>&lt;/sub&gt;} : Meta-training set&lt;/p&gt;
+<p>{D<sub>T<sub>j</sub>&lt;/sub&gt;} : Meta-testing set&lt;/p&gt;
+<p>{D<sub>T</sub><sup>tr</sup>} : Traning data for task T</p>
+<p>{D<sub>T</sub><sup>test</sup>} : Test data for task T</p>
+<p>L<sub>T<sub>i</sub>&lt;/sub&gt; : Loss or feedback from the sampled task T<sub>i</sub>&lt;/p&gt;
+<p>Given that we want our model to quickly adapt to a wide range of tasks, can we incorporate this inductive bias  explicitly into our training ?</p>
+<h4 id="PROBLEM-STATEMENT-:">
+<a class="anchor" href="#PROBLEM-STATEMENT-:" aria-hidden="true"><span class="octicon octicon-link"></span></a>PROBLEM STATEMENT :<a class="anchor-link" href="#PROBLEM-STATEMENT-:"> </a>
+</h4>
+<p>Learn the weights of a neural net that can quickly learn to perform well on a new task.</p>
+<h4 id="Method-:">
+<a class="anchor" href="#Method-:" aria-hidden="true"><span class="octicon octicon-link"></span></a>Method :<a class="anchor-link" href="#Method-:"> </a>
+</h4>
+<p>The intuition is to learn the right set of initial parameters that which upon few gradient steps on a new task,would result in good performance.</p>
+<p>Consider a task T<sub>i</sub> drawn out of task distribution p(T). Now, from this T<sub>i</sub> we can sample training dataset D<sub>i</sub><sup>tr</sup>,the loss/feedback on which is given by L<sub>T<sub>i</sub>&lt;/sub&gt;. This loss is parameterized by f<sub>θ</sub>. Suppose we take few gradient steps on this $\theta$ to give $\phi$. The error on test data set ,D<sub>i</sub><sup>test</sup> sampled from T<sub>i</sub>,acts as training signal to update orginal f<sub>θ</sub>.&lt;/p&gt;
+<p>What makes this process different from traditional training of neural networks is that the gradient is taken over meta-parameters $\phi$ through $\theta$. Consider the case of taking one gradient over L<sub>T<sub>i</sub>&lt;/sub&gt; to arrive at $\phi$.&lt;/p&gt;
+<p>$\phi$<sub>i</sub> = $\theta$ - $\alpha$ $\nabla$<sub>$\theta$</sub> L($\theta$,D<sub>T<sub>i</sub>&lt;/sub&gt;<sup>tr</sup>)&lt;/p&gt;
+<p>$\alpha$ : Learning rate(hyper-parameter)</p>
+<p>Now,the loss on $\phi$<sub>i</sub> (taken on  D<sub>T<sub>i</sub>&lt;/sub&gt;<sup>test</sup>) is backpropagated through $\theta$.&lt;/p&gt;
+<p>min<sub>$\theta$</sub> $\Sigma$ <sub> {T<sub>i</sub>} ~ p(T) &lt;/sub&gt;      L($\phi$<sub>i</sub>,D<sub>T<sub>i</sub>&lt;/sub&gt;<sup>test</sup>) = min<sub>$\theta$</sub> $\Sigma$ <sub> {T<sub>i</sub>} ~ p(T) &lt;/sub&gt;  L($\theta$ - $\alpha$ $\nabla$<sub>$\theta$</sub> L($\theta$,D<sub>T<sub>i</sub>&lt;/sub&gt;<sup>tr</sup>),D<sub>T<sub>i</sub>&lt;/sub&gt;<sup>test</sup>)&lt;/p&gt;
+<p>Note that the meta-optimization is performed over the model parameters $\theta$, whereas the objective is computed using the updated model parameters $\phi$. In effect, the method aims to optimize the model parameters such that one or a small number of gradient steps on a new task will produce maximally effective behavior on that task.</p>
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="/images/copied_from_nb/my_icons/maml.png" alt=""></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now, We will see how this approach can be applied to <code>Continual learning</code> by just tweaking the problem statement.</p>
 
 </div>
 </div>
@@ -272,8 +428,24 @@ And another <sup id="fnref-2" class="footnote-ref"><a href="#fn-2">2</a></sup>
 </div>
 </div>
 </div>
-</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p></p>
+<div class="footnotes"><p id="fn-1">1. <a href="https://arxiv.org/abs/1909.08383">arXiv:1909.08383</a>!<a href="#fnref-1" class="footnote footnotes">↩</a></p></div>
+<div class="footnotes"><p id="fn-2">2. <a href="https://arxiv.org/abs/1905.12588">arXiv:1905.12588</a>!<a href="#fnref-2" class="footnote footnotes">↩</a></p></div>
+<div class="footnotes"><p id="fn-3">3. <a href="https://arxiv.org/abs/1703.03400">arXiv:1703.03400</a>!<a href="#fnref-3" class="footnote footnotes">↩</a></p></div>
 
+</div>
+</div>
+</div>
+&lt;/div&gt;
+ 
+
+</sub></sub></sub></sub></sub></p></sub></p></sub></p></sub></p></sub></p></sub></p></sub></p></sub></p>
+</div>
+</div></div>
+</div>
 
 
   </div><!-- from https://github.com/utterance/utterances -->
