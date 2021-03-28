@@ -107,7 +107,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      14 min read
+      16 min read
     
 </span></p>
 
@@ -157,6 +157,7 @@ window.onload = wrap_img;
 <ul>
 <li class="toc-entry toc-h3"><a href="#Motivation">Motivation </a></li>
 <li class="toc-entry toc-h3"><a href="#Problem">Problem </a></li>
+<li class="toc-entry toc-h3"><a href="#Bellmann-Equation-and-MDP's">Bellmann Equation and MDP&#39;s </a></li>
 </ul>
 </li>
 </ul><!--
@@ -984,6 +985,20 @@ sequence length.</p>
 <p>Modern <code>Deep RL</code> deals with solving this stochastic version of the problem when the transition probabilities are not available and the number of possible states is very large. Consider the following video game playing scenario. The pixels on the screen at any timestamp can be taken as <code>state</code>. The game rules provides list of <code>possible actions</code> and the corresponding <code>reward</code>(increase in score).</p>
 <p><img src="/images/copied_from_nb/my_icons/vid.png" alt="" title="Credit: https://nanjiang.cs.illinois.edu/files/cs598/slides_intro_f20.pdf"></p>
 <p>By the end of this module we will develop all the machinery to understand the algorithms that learn optimal(or good) policies for this general case.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Bellmann-Equation-and-MDP's">
+<a class="anchor" href="#Bellmann-Equation-and-MDP's" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bellmann Equation and MDP's<a class="anchor-link" href="#Bellmann-Equation-and-MDP's"> </a>
+</h3>
+<p>In this section we will devolop some theory. First let's define an object called Markov Decision Process (MDP),given by the tuple of $(S,A,P,R,\gamma)$. Here discounting factor $\gamma$ is largely a mathematical convenience as it helps to bound the <code>total reward</code>. Any reward $r_t$ received at timestamp <code>t</code> is multiplied by $\gamma^{t-1}$, that is we prefer immediate rewards over faraway ones. The term <code>Markov</code> refers to the fact that given present state <code>s</code> and action taken from there <code>a</code>, next state is independent of the past trajectory. Consider the example of <code>stochastic shortest path</code> but with the goal state <code>g</code> infinitely far away. In that setting we want to maximize the average reward we will get starting from any state.</p>
+<p>The only <code>knob</code> agent has is policy $\pi : S \rightarrow A$.(which of the possible actions to take). The environment dynamics (P and R) are not under agent's control. For simplicity,let's assume that rewards are bounded and positive. Let's say that the agent has a policy $\pi$ and starts to intreract with the environment. The value function <code>v(s)</code> refers to the average reward starting from state <code>s</code> and following policy $\pi$. Then <code>v(s)</code> for all the states satisfies a recursive definition as shown below.</p>
+<p>Thus finding $v^{\pi}(s)$ amounts to solving system of linear equation or in matrix notation finding the inverse of a matrix. But, we still need the proof for the existence of the inverse for $I - \gamma.P^{\pi}$. Before going further, it's important to thoroughly understand the bellmann equation : $V^{\pi} = R^{\pi} + \gamma.P^{\pi}.V^{\pi}$. The deriviation involves observing the fact that once the agent takes initial action from state <code>s</code>, the transition probability will dictate it's next state <code>s'</code>. From there, the average reward by definition is  given by <code>v(s')</code>, leaving a recursive definition.</p>
+<p>Below i have give the proof for the existence of inverse. If we recall, a matrix A($n * n$) multiplied by a column vector X ($n * 1$) merely takes a linear combination of all the column vectors in A. Existence of inverse to <code>A</code> means that there doesnot exist a non-zero vector X, that can collapse A to a null vector. Using this fact and the traingular inequality on $I - \gamma.P^{\pi}$ completes the proof.</p>
 
 </div>
 </div>
