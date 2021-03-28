@@ -107,7 +107,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      4 min read
+      6 min read
     
 </span></p>
 
@@ -149,6 +149,7 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h2"><a href="#Basics">Basics </a>
 <ul>
 <li class="toc-entry toc-h3"><a href="#Train-a-linear-regression-model-using-gradient-descent.">Train a linear regression model using gradient-descent. </a></li>
+<li class="toc-entry toc-h3"><a href="#Adding-Inductive-biases---convolutions-and-recurrent-networks.">Adding Inductive biases - convolutions and recurrent networks. </a></li>
 </ul>
 </li>
 <li class="toc-entry toc-h2"><a href="#Deep-RL-Methods">Deep RL Methods </a>
@@ -461,6 +462,57 @@ $$y = \begin{bmatrix} x1 \\ x2 \end{bmatrix} . \begin{bmatrix} 2 \\ -4.2 \end{bm
 </div>
     
 
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># In the above code what happens if 'lr' is not dynamically adjusted.</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Adding-Inductive-biases---convolutions-and-recurrent-networks.">
+<a class="anchor" href="#Adding-Inductive-biases---convolutions-and-recurrent-networks." aria-hidden="true"><span class="octicon octicon-link"></span></a>Adding Inductive biases - convolutions and recurrent networks.<a class="anchor-link" href="#Adding-Inductive-biases---convolutions-and-recurrent-networks."> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In the below feedforward network each neuron is connected to all the neurons in the previous layer. No inductive biases in the connectivity.</p>
+<p><img src="/images/copied_from_nb/my_icons/fc.png" alt="FeedForward" title="Credit: https://atcold.github.io/pytorch-Deep-Learning/en/week03/03-3/"></p>
+<p><code>Locality</code> : For almost all natural signals it is easier to predict the future using recent past compared to any earlier versions. <code>Locality</code> allows for the sparsity of weights. We can put faraway weights to zero. In the below figure the <code>15</code> weights of the first layer is reduced to <code>9</code>. It's also important to be aware of the concept of <code>receptive field</code>(RF). <code>RF</code> of layer <code>a</code> w.r.t <code>b</code> is simply the number of neurons in <code>a</code> that influence the outputs of layer b.</p>
+<p><img src="/images/copied_from_nb/my_icons/sparsity.png" alt="" title="Credit: https://atcold.github.io/pytorch-Deep-Learning/en/week03/03-3/"></p>
+<p><code>Stationarity</code> : Same patterns are repeated again and again.
+We don't need connections from the inputs far down. <code>Stationarity</code> implies weight sharing.</p>
+<p><img src="/images/copied_from_nb/my_icons/parashare.png" alt="" title="Credit: https://atcold.github.io/pytorch-Deep-Learning/en/week03/03-3/"></p>
+<p><code>Compositionality</code>: There are hierarchies. Letters make up words,words make up sentences and so on. <code>Compisitionality</code> implies deeper networks.</p>
+<p>Now We will see how popular building blocks like CNN'S and RNN'S leverage these properties. <code>CNN</code>'s are a linear layer with lots of <code>weight sharing</code> and <code>sparsity</code>. RNN's just use <code>weight sharing</code> but BPTT takes the <code>locality</code> into account.</p>
+<p>CNN  = linear layer + weight sharing + sparsity.</p>
+<p>Consider convolving over a 4 <em> 4 inputs with a 3 </em> 3 kernel with a unit stride as presented below.
+<img src="/images/copied_from_nb/my_icons/cnn.png" alt="" title="Credit:https://arxiv.org/pdf/1603.07285.pdf"></p>
+<p>If I stack the 2-d input into a 1-d vector by unrolling left to right and top to bottom, the convolution can be represented as a matrix multiplication.
+<img src="/images/copied_from_nb/my_icons/conv_mat.png" alt="" title="Credit:https://arxiv.org/pdf/1603.07285.pdf"></p>
+<p>The <code>zeros</code> along the columns encode <code>locality</code> while the replication of same weights along the rows account for <code>stationarity</code>. If the above properties doesn't make sense for your input , then CNN's aren't the right choice.</p>
+<p>RNN = linear layer + weight sharing + BPTT(Back-prop through time)</p>
+<p><img src="/images/copied_from_nb/my_icons/rnn.png" alt="" title="Credit:https://atcold.github.io/pytorch-Deep-Learning/en/week06/06-3/"></p>
+<p>RNN's are used for sequence data. In the above figure the <code>arrow</code> indicates matrix multiplication. The hidden state <code>h(t)</code> at time <code>t</code> is equal to Affine_transform(x(t)) + Affine_transform(h(t-1)).(<code>Note</code>: Affine_transform refers to matrix multiplication). The following code will makes it all clear.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
