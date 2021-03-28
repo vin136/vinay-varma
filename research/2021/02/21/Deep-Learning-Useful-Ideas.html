@@ -107,7 +107,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      2 min read
+      4 min read
     
 </span></p>
 
@@ -146,6 +146,11 @@ window.onload = wrap_img;
 
   <div class="post-content e-content" itemprop="articleBody">
     <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#Basics">Basics </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#Train-a-linear-regression-model-using-gradient-descent.">Train a linear regression model using gradient-descent. </a></li>
+</ul>
+</li>
 <li class="toc-entry toc-h2"><a href="#Deep-RL-Methods">Deep RL Methods </a>
 <ul>
 <li class="toc-entry toc-h3"><a href="#Motivation">Motivation </a></li>
@@ -187,6 +192,278 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Basics">
+<a class="anchor" href="#Basics" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basics<a class="anchor-link" href="#Basics"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Many deep learning models follow a simple recipe:</p>
+
+<pre><code>1. Gather the data.
+2. Define learnable parameters. And specify how they will interact with the data.(architecture)
+3. Define a loss function to minimize.
+4. Adjust the parameters until satisfied.</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Train-a-linear-regression-model-using-gradient-descent.">
+<a class="anchor" href="#Train-a-linear-regression-model-using-gradient-descent." aria-hidden="true"><span class="octicon octicon-link"></span></a>Train a linear regression model using gradient-descent.<a class="anchor-link" href="#Train-a-linear-regression-model-using-gradient-descent."> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here we will see how we can perform all the above steps starting with the most barebones implementation. Note that the procedure outlined here is general purpose - meaning the way we adjust <code>parameters</code> is going to remain same irrecpective of the modality of the data, details of the loss function or the architecture.</p>
+<p>Step 1. Gather the data</p>
+<p>Let's generate some fake data.Let's assume that the data is coming from $y = 2*x1 - 4.2*x2 + 1 + noise(measurement error)$. This can be more succintly represented in vector notation :
+
+$$y = \begin{bmatrix} x1 \\ x2 \end{bmatrix} . \begin{bmatrix} 2 \\ -4.2 \end{bmatrix} + 1$$
+</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="o">*</span><span class="n">params</span><span class="p">,</span><span class="n">const</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">rows</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="c1">#number of features in the input</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,(</span><span class="n">rows</span><span class="p">,</span><span class="n">dim</span><span class="p">))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="nd">@np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">params</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">if</span> <span class="n">const</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">const</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span>
+
+<span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mf">4.2</span><span class="p">,</span><span class="n">const</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>((1000, 2), (1000, 1))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Step 2. Define learnable parameters. And specify how they will interact with the data.(architecture)</p>
+<p>Now we aim to learn the right coefficients to approximate the data generation process. First let's look at some code.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Start with a random guess that respects the sanctity of the data.i.e our inputs are of dimension 1000*2 </span>
+<span class="c1"># outputs are 1000*1. Multiplying inputs by a 2*1 matrix(weights) and adding a constant(bias) is the simplest way</span>
+<span class="c1"># to ensure an output of 1000*1. </span>
+
+<span class="c1"># initial guess</span>
+<span class="n">init_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span><span class="o">-</span><span class="mf">1.</span><span class="p">]])</span> <span class="c1">#shape -&gt; 1*2</span>
+<span class="n">init_bias</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">])</span>
+
+<span class="c1">#expected output</span>
+<span class="k">def</span> <span class="nf">give_expected_output</span><span class="p">(</span><span class="n">inpt</span><span class="p">,</span><span class="n">weights</span><span class="p">,</span><span class="n">bias</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">((</span><span class="n">inpt</span><span class="nd">@weights</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="n">bias</span><span class="p">)</span>
+
+<span class="n">out</span> <span class="o">=</span> <span class="n">give_expected_output</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">init_weights</span><span class="p">,</span><span class="n">init_bias</span><span class="p">)</span><span class="c1">#shape -&gt; 1000*1</span>
+
+<span class="k">def</span> <span class="nf">get_error</span><span class="p">(</span><span class="n">out</span><span class="p">,</span><span class="n">expected_out</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">expected_out</span> <span class="o">-</span> <span class="n">out</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">get_error</span><span class="p">(</span><span class="n">out</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> <span class="c1"># IF WE CAN DRIVE THIS NUMBER DOWN TO ZERO VIA A GENERAL PURPOSE PROCESS,WE ARE GOOD TO GO</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>2.121630476687219</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_grads</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span><span class="n">bias</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">loss_func</span><span class="o">=</span><span class="s1">'squared_loss'</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">loss_func</span> <span class="o">==</span> <span class="s1">'squared_loss'</span><span class="p">:</span>
+        <span class="n">weights_grad</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">x</span><span class="nd">@weights</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">bias</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span><span class="o">*</span><span class="n">weights</span><span class="p">)</span>
+        <span class="n">bias_grad</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">x</span><span class="nd">@weights</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">bias</span> <span class="o">-</span> <span class="n">y</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Sorry I'm not yet scalable enough for arbitrary loss functions"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">weights_grad</span><span class="p">,</span><span class="n">bias_grad</span>
+        
+
+
+<span class="n">grad_init_weights</span><span class="p">,</span><span class="n">grad_bias</span> <span class="o">=</span> <span class="n">get_grads</span><span class="p">(</span><span class="n">init_weights</span><span class="p">,</span><span class="n">init_bias</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">loss_func</span> <span class="o">=</span> <span class="s1">'squared_loss'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">learn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">init_weights</span><span class="p">,</span><span class="n">init_bias</span><span class="p">,</span><span class="n">loss_func</span><span class="p">,</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span><span class="n">epochs</span><span class="o">=</span><span class="mi">5000</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">give_expected_output</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">init_weights</span><span class="p">,</span><span class="n">init_bias</span><span class="p">)</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">loss_func</span><span class="p">(</span><span class="n">out</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+    <span class="c1">#print(f'initial error, epoch 0: {error}')</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="p">[</span><span class="n">error</span><span class="p">]</span>
+    <span class="n">pres_lr</span> <span class="o">=</span> <span class="n">lr</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+        <span class="n">weight_grad</span><span class="p">,</span><span class="n">bias_grad</span> <span class="o">=</span> <span class="n">get_grads</span><span class="p">(</span><span class="n">init_weights</span><span class="p">,</span><span class="n">init_bias</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">init_weights</span> <span class="o">-=</span> <span class="n">weight_grad</span><span class="o">*</span><span class="n">pres_lr</span>
+        <span class="n">init_bias</span> <span class="o">-=</span> <span class="n">bias_grad</span><span class="o">*</span><span class="n">pres_lr</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">give_expected_output</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">init_weights</span><span class="p">,</span><span class="n">init_bias</span><span class="p">)</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">loss_func</span><span class="p">(</span><span class="n">out</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">weight_grad</span><span class="p">)</span><span class="o">&lt;</span><span class="mf">0.0001</span><span class="p">:</span>
+            <span class="n">pres_lr</span> <span class="o">=</span> <span class="n">pres_lr</span><span class="o">*</span><span class="mi">2</span>
+        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">errors</span><span class="p">,</span><span class="n">init_weights</span><span class="p">,</span><span class="n">init_bias</span>
+        
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">errors</span><span class="p">,</span><span class="n">final_weights</span><span class="p">,</span><span class="n">final_bias</span> <span class="o">=</span> <span class="n">learn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">init_weights</span><span class="p">,</span><span class="n">init_bias</span><span class="p">,</span><span class="n">get_error</span><span class="p">)</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[&lt;matplotlib.lines.Line2D at 0x7f2be3ea9df0&gt;]</pre>
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXQAAAD4CAYAAAD8Zh1EAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjMuMSwgaHR0cHM6Ly9tYXRwbG90bGliLm9yZy/d3fzzAAAACXBIWXMAAAsTAAALEwEAmpwYAAAXnklEQVR4nO3deXCcd33H8fd3tVrJWkmWdTo+FMmJDxwISVASaAIJR24KlKFtQltaJjOZTI9Jj2kJPaAMnaHAQCkTKE0hk7aEpAcJUFICKYQ4pSRBThzHR3zHtiwfki/Zki3r+PaPfWSvZUkrWys9ep7n8xp2tHqe3z7P95cxn/3pt7/nWXN3REQk+lJhFyAiIsWhQBcRiQkFuohITCjQRURiQoEuIhIT6bBOXF9f7y0tLWGdXkQkklavXt3t7g1j7Qst0FtaWmhvbw/r9CIikWRmO8fbpykXEZGYUKCLiMSEAl1EJCYU6CIiMaFAFxGJCQW6iEhMKNBFRGIicoG+ad8xPv/D1zjceyrsUkREZpXIBfqO7l6+8sw29hw5EXYpIiKzSuQCva4yA8AhjdBFRM4SuUCvzSrQRUTGErlArwsC/aACXUTkLJEL9OryUkpSxqHe/rBLERGZVSIX6KmUMa8ioykXEZFRIhfokJt2OXhcgS4iki+SgV6b1QhdRGS0aAZ6pQJdRGS0SAZ6XTajVS4iIqNEMtBrsxmOnhhgYGg47FJERGaNSAb6yFr0w30apYuIjIhkoNdmywBdLSoiki+igR5c/q+liyIip0Uy0Edu0KUPRkVEzohkoOsGXSIi54pkoM+ryGCmEbqISL5IBnpJyqiZU6obdImI5IlkoIMu/xcRGS2ygV6XLVOgi4jkiWyga4QuInK2goFuZovN7Bkz22hm683svjHamJl92cy2mtlaM7tqeso9QzfoEhE5W3oSbQaBP3H3l8ysClhtZk+7+4a8NrcBS4PHtcA/BD+nTV02w+G+AYaHnVTKpvNUIiKRUHCE7u573f2l4PkxYCOwcFSz9wP/4jnPAzVmdlHRq81Tm80wNOwcOTEwnacREYmM85pDN7MW4ErghVG7FgK7837v4NzQx8zuMbN2M2vv6uo6z1LP1lCVu59L93EtXRQRgfMIdDOrBL4N/KG794zePcZL/JwN7g+6e5u7tzU0NJxfpaM0VOYCveuYAl1EBCYZ6GZWSi7MH3H3x8do0gEszvt9EdA59fLGV1+lQBcRyTeZVS4GfAPY6O5fHKfZ94CPBKtd3gocdfe9RazzHA0KdBGRs0xmlct1wG8Br5rZmmDbnwPNAO7+NeC/gduBrUAf8NGiVzpKVVmasnRKc+giIoGCge7u/8vYc+T5bRz4vWIVNRlmRn1lmUboIiKByF4pCrlply6N0EVEgDgEukboIiJAxAO9vrJMc+giIoFIB3pDVRkHe08xODQcdikiIqGLfKC7w6E+3aRLRCTagR58WbTm0UVEoh7ourhIROS0aAd6ZTkA3cc15SIiEulAr6/SlIuIyIhIB3pFJk02U6JAFxEh4oEOuXl0rUUXEYlBoOt+LiIiOZEPdN3PRUQkJx6BrhG6iEj0A72xqoyjJwY4OTAUdikiIqGKfKA3VefWou/vORlyJSIi4Yp8oM+fmwv0fUcV6CKSbJEP9NMjdM2ji0jCxSfQNUIXkYSLfKBXl6eZU1rCPs2hi0jCRT7QzYz5c8v1oaiIJF7kAx1ySxcV6CKSdLEI9PlzyzXlIiKJF49Ary5nf08/7h52KSIioYlFoDdWl3NqcJgjfQNhlyIiEppYBPr8YOmipl1EJMniEehzc98tqkAXkSSLRaA3VuVG6AcU6CKSYLEI9JGrRfcd1eX/IpJcsQj0TDpFXTajKRcRSbSCgW5mD5nZATNbN87+uWb2X2b2ipmtN7OPFr/MwpqqdbWoiCTbZEboDwO3TrD/94AN7v5m4EbgC2aWmXpp56epuky30BWRRCsY6O6+Cjg0UROgyswMqAzaDhanvMlbUDOHvUdPzPRpRURmjWLMoT8AvAHoBF4F7nP34bEamtk9ZtZuZu1dXV1FOPUZC2rmcLhvgL5TM/5eIiIyKxQj0G8B1gALgCuAB8yseqyG7v6gu7e5e1tDQ0MRTn3Gwpo5AHQe0bSLiCRTMQL9o8DjnrMV2AGsKMJxz8uC04GuaRcRSaZiBPou4N0AZtYELAe2F+G452VBTW4tugJdRJIqXaiBmT1KbvVKvZl1AJ8ESgHc/WvAp4GHzexVwICPuXv3tFU8jvnV5aQM9ijQRSShCga6u99VYH8ncHPRKrpA6ZIU86vLFegiklixuFJ0xIKaOZpyEZHEimGga5WLiCRT7AJ979ETDA/rm4tEJHliFegLa8oZGHK6j+uuiyKSPPEK9Hm5tegdmkcXkQSKVaDr4iIRSTIFuohITMQq0KvLS6kqS2uli4gkUqwCHXKj9I7DGqGLSPLELtAX186h43Bf2GWIiMy4GAZ6BbsO9eGutegikiyxC/Tm2gr6Tg1xsPdU2KWIiMyoWAY6wK5DmnYRkWSJbaDvVqCLSMLELtAXzQtG6AcV6CKSLLEL9DmZEhqryjTlIiKJE7tAh9y0iwJdRJImtoGuOXQRSZpYBvri2gr29pykf3Ao7FJERGZMLAO9ubYCd9ijWwCISILEM9DrtBZdRJInnoGutegikkCxDPSGyjLK0il2ai26iCRILAM9lTIurqvgdQW6iCRILAMdoLU+y/bu42GXISIyY2Ib6EsaKtl1sI/BoeGwSxERmRGxDfTW+iyDw65vLxKRxIhtoF/SkAXQtIuIJEZsA721vhKA7V29IVciIjIzYhvotdkMNRWlbO9WoItIMhQMdDN7yMwOmNm6CdrcaGZrzGy9mT1b3BIvXGt9lh0aoYtIQkxmhP4wcOt4O82sBvgq8D53vwz41aJUVgRL6ivZoRG6iCREwUB391XAoQmafBh43N13Be0PFKm2KVvSkGVfz0l6+wfDLkVEZNoVYw59GTDPzH5qZqvN7CPjNTSze8ys3czau7q6inDqibXW51a6aJQuIklQjEBPA28B7gBuAf7KzJaN1dDdH3T3Nndva2hoKMKpJ7akQYEuIsmRLsIxOoBud+8Fes1sFfBmYHMRjj0lLXVZzGBbl9aii0j8FWOE/l3g7WaWNrMK4FpgYxGOO2XlpSU011awZb8CXUTir+AI3cweBW4E6s2sA/gkUArg7l9z941m9hSwFhgGvu7u4y5xnGlLG6vYvP9Y2GWIiEy7goHu7ndNos3ngc8XpaIiWz6/kp9uOsCpwWEy6dheRyUiEt8rRUcsa6picNj1waiIxF4iAh1gk6ZdRCTmYh/oSxqylKSMLQp0EYm52Ad6WbqElroKNu1ToItIvMU+0CE37bLlgJYuiki8JSLQlzZVsfNgLycHhsIuRURk2iQi0Jc3VTHssFWjdBGJsUQE+rKm3LcX6QIjEYmzRAR6a32WsnSKDZ09YZciIjJtEhHo6ZIUKy6qZr0CXURiLBGBDnDZgmrWdx7F3cMuRURkWiQq0HtODtJx+ETYpYiITIsEBfpcAE27iEhsJSbQV8yvoiRlbOg8GnYpIiLTIjGBXl5awiUNWY3QRSS2EhPokJt2UaCLSFwlLNCr2ddzku7j/WGXIiJSdAkL9NwHo+v2aB5dROInUYH+xoXVmMGa3UfCLkVEpOgSFehV5aUsa6xSoItILCUq0AGuWFzDmt1HdMWoiMRO4gL9yuYajvQN8PrBvrBLEREpqsQF+hXNNQCs2X043EJERIoscYG+tLGKbKaEl3cdCbsUEZGiSlygl6SMyxfV6INREYmdxAU65KZdNnT26DtGRSRWEhnoVzXPY3DYeUWjdBGJkUQG+tUt8zCDF3ccCrsUEZGiSWSg11RkWN5UxQsKdBGJkUQGOsC1rbWs3nmYgaHhsEsRESmKgoFuZg+Z2QEzW1eg3dVmNmRmHypeedPn2iV1nBgY4lXdqEtEYmIyI/SHgVsnamBmJcBngR8WoaYZcU1rLQAvbNe0i4jEQ8FAd/dVQKHU+wPg28CBYhQ1E+ory7ikIcuLOw6GXYqISFFMeQ7dzBYCvwJ8berlzKxrl9TR/vphBjWPLiIxUIwPRb8EfMzdC16lY2b3mFm7mbV3dXUV4dRT87YldRzrH+SVDs2ji0j0FSPQ24DHzOx14EPAV83sA2M1dPcH3b3N3dsaGhqKcOqpuf7Sesxg1ebw31xERKZqyoHu7q3u3uLuLcB/Ar/r7t+Z6nFnwrxshssX1fDcFgW6iETfZJYtPgr8HFhuZh1mdreZ3Wtm905/edPvhqX1rNl9hKN9A2GXIiIyJelCDdz9rskezN1/Z0rVhOAdyxr48k+28rNt3dz+povCLkdE5IIl9krREVcsrqGqPK15dBGJvMQHerokxXWX1PPs5i59z6iIRFriAx3gXW9oZO/Rk6zv7Am7FBGRC6ZAB969opGUwY/W7wu7FBGRC6ZAB+oqy7i6pZYfrt8fdikiIhdMgR64+bL5bNp/jNe7e8MuRUTkgijQAzevbALg6Q0apYtINCnQA4trK1h5UTVPaR5dRCJKgZ7n9jfNZ/XOw3Qc7gu7FBGR86ZAz/P+KxYC8L1XOkOuRETk/CnQ8yyureAtF8/jOy/v0UVGIhI5CvRRPnDFAjbvP87GvcfCLkVE5Lwo0Ee54/IFpFPGd9fsCbsUEZHzokAfpTab4cblDTzx8h4G9NV0IhIhCvQx3Hl1MweO9fPjjVqTLiLRoUAfwztXNLJgbjmPvLAr7FJERCZNgT6GkpRx5zXNPLelm50HdSsAEYkGBfo4fv3qxZSkjG9plC4iEaFAH0dTdTk3r2zisV/sprd/MOxyREQKUqBP4J53LOHoiQEe+8XusEsRESlIgT6BK5vncU1rLd94bruWMIrIrKdAL+DeG5bQefQk31+r+7uIyOymQC/gxmWNLGuq5IGfbGVQo3QRmcUU6AWkUsYfvWcZ27p6eeJl3Q5ARGYvBfok3PrG+Vy+aC5f+p8t9A8OhV2OiMiYFOiTYGb86S3L2XPkBI88r3XpIjI7KdAn6fpL67nu0jr+/sdbOHi8P+xyRETOoUCfJDPjr3/5Mnr7B/ncU5vCLkdE5BwK9POwtKmKu69v5d/ad/PSrsNhlyMichYF+nn6g3cvZX51OR//9qv6gFREZhUF+nmqLEvzmQ++iU37j/HFpzeHXY6IyGkFA93MHjKzA2a2bpz9v2Fma4PH/5nZm4tf5uzyzhWN3HVNMw+u2s6LOw6FXY6ICDC5EfrDwK0T7N8B3ODulwOfBh4sQl2z3l/e8QYWz6vgvsdeplurXkRkFigY6O6+Chh3GOru/+fuI58QPg8sKlJts1q2LM1Xf+MqDvWe4ve/9ZJuCyAioSv2HPrdwA/G22lm95hZu5m1d3V1FfnUM++NC+fymQ++iee3H+JvntyIu4ddkogkWLpYBzKzd5IL9OvHa+PuDxJMybS1tcUi/T541SLW7enhoZ/tYP7ccu694ZKwSxKRhCpKoJvZ5cDXgdvc/WAxjhklf3nHG+g63s/f/uA1aisy/NrVi8MuSUQSaMqBbmbNwOPAb7l7ItfxpVLGF371zRzpO8XHHl/L4LDz4Wubwy5LRBJmMssWHwV+Diw3sw4zu9vM7jWze4MmnwDqgK+a2Roza5/GemetTDrFP32kjRuXNfDnT7zKPz67LeySRCRhLKwP8tra2ry9PX7Zf2pwmD/69zU8uXYvd13TzKfedxmZtK7fEpHiMLPV7t421r6ifSgqOZl0ii/feSUtdRV85ZltbN5/jAc+fCUXzZ0TdmkiEnMaOk6DkpTxp7es4IEPX8mGzh5u+btVfHfNHi1rFJFppUCfRu+9fAE/uO/tXNpYyX2PreGef13NroN9YZclIjGlQJ9mLfVZ/uPeX+L+21bws63dvOeLz/K5p17jaN9A2KWJSMzoQ9EZtL/nJJ996jUef2kP2UwJv/m2i7n7+lYaq8rDLk1EImKiD0UV6CF4bV8PX3lmG0+u7aQkZdy0sok7r27m+kvrSaUs7PJEZBZToM9SO7p7+ebzO3n8pQ4O9w3QWFXGTSubuOWy+bx1SZ2WO4rIORTos1z/4BA/Wr+fJ9fu5dnNXZwYGKIiU8JbLp7Hta21XNNax2ULqsmWaZWpSNIp0CPk5MAQz23p5rktXbyw/RCb9h8DwAxa6rKsvKia5fOruLiugovrsjTXVjCvohQzTdWIJIEuLIqQ8tISblrZxE0rmwA41HuK1TsPs6Gzhw17j7J2zxGefHXvWa+pLEvTVF1GfeXII0N9ZRk12QxVZWmyZWkqRx7labKZEjLpFKUlIw+L9BuCu+MOHjyHkefg5PadaXtm20h7z9vHGPtHHy/43/jHm+B85J0z1+7s9uP2seB/g8kcY+JGhY4xE+eYjNlSx1Q0VJWxoKb4Fxsq0Ge52mzmrIAH6Ds1SMfhE+w82MeuQ33sPtTHgWMn6T52io17e+g63s+xk4PndZ7SEiNTkqI0CPqUgWGYQSoIezNO/26ABT8xMDgr1IaDIBsOvvcjf5s7DOeF2XBewA0HBxm9LWiet92DY4hEz703XML9t60o+nEV6BFUkUmzrKmKZU1V47Y5OTBEz8kBevuHOH5ykOP9uUdv/yC9pwY5NTjMwNAwA0N++vnpn0PDDA+fPbIcCdqzAztvhOsjgW/Bm0HwRhC8MaSCNwPDSKWA028W575xpMyCtrk7WY68aZx5IznznLxtI8cZ+VtjpB7y9p95fvZrOP2a/OMFvwf7xzrfWMfjrBry2o96zej9hRgTN5rcMQrsL3iMwicpdIzJ/C1Y6C/GyR1javunU3NtdlqOq0CPqfLSEspLS2D8zBeRmNG6OBGRmFCgi4jEhAJdRCQmFOgiIjGhQBcRiQkFuohITCjQRURiQoEuIhITod2cy8y6gJ0X+PJ6oLuI5USB+pwM6nMyTKXPF7t7w1g7Qgv0qTCz9vHuNhZX6nMyqM/JMF191pSLiEhMKNBFRGIiqoH+YNgFhEB9Tgb1ORmmpc+RnEMXEZFzRXWELiIioyjQRURiInKBbma3mtkmM9tqZveHXc9UmNlDZnbAzNblbas1s6fNbEvwc17evo8H/d5kZrfkbX+Lmb0a7PuyzdIvCDWzxWb2jJltNLP1ZnZfsD3OfS43sxfN7JWgz58Ktse2zyPMrMTMXjaz7we/x7rPZvZ6UOsaM2sPts1sn3NfahuNB1ACbAOWABngFWBl2HVNoT/vAK4C1uVt+xxwf/D8fuCzwfOVQX/LgNbgv0NJsO9F4G3kvpnrB8BtYfdtnP5eBFwVPK8CNgf9inOfDagMnpcCLwBvjXOf8/r+x8C3gO/H/d92UOvrQP2obTPa56iN0K8Btrr7dnc/BTwGvD/kmi6Yu68CDo3a/H7gn4Pn/wx8IG/7Y+7e7+47gK3ANWZ2EVDt7j/33L+Gf8l7zazi7nvd/aXg+TFgI7CQePfZ3f148Gtp8HBi3GcAM1sE3AF8PW9zrPs8jhntc9QCfSGwO+/3jmBbnDS5+17IBSDQGGwfr+8Lg+ejt89qZtYCXEluxBrrPgdTD2uAA8DT7h77PgNfAv4MGM7bFvc+O/AjM1ttZvcE22a0z1H7kuix5pKSsu5yvL5H7r+JmVUC3wb+0N17JpgijEWf3X0IuMLMaoAnzOyNEzSPfJ/N7L3AAXdfbWY3TuYlY2yLVJ8D17l7p5k1Ak+b2WsTtJ2WPkdthN4BLM77fRHQGVIt02V/8GcXwc8Dwfbx+t4RPB+9fVYys1JyYf6Iuz8ebI51n0e4+xHgp8CtxLvP1wHvM7PXyU2LvsvMvkm8+4y7dwY/DwBPkJsintE+Ry3QfwEsNbNWM8sAdwLfC7mmYvse8NvB898Gvpu3/U4zKzOzVmAp8GLwZ9wxM3tr8Gn4R/JeM6sE9X0D2OjuX8zbFec+NwQjc8xsDvAe4DVi3Gd3/7i7L3L3FnL/H/2Ju/8mMe6zmWXNrGrkOXAzsI6Z7nPYnwxfwCfJt5NbHbEN+Iuw65liXx4F9gID5N6Z7wbqgB8DW4KftXnt/yLo9ybyPvkG2oJ/PNuABwiuAJ5tD+B6cn8+rgXWBI/bY97ny4GXgz6vAz4RbI9tn0f1/0bOrHKJbZ/Jrbx7JXisH8mmme6zLv0XEYmJqE25iIjIOBToIiIxoUAXEYkJBbqISEwo0EVEYkKBLiISEwp0EZGY+H9IvOOtE5xO0wAAAABJRU5ErkJggg==%0A">
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">final_weights</span><span class="p">,</span><span class="n">final_bias</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(array([[-0.82604061, -1.82604061]]), array([0.97582166]))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Deep-RL-Methods">
 <a class="anchor" href="#Deep-RL-Methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>Deep RL Methods<a class="anchor-link" href="#Deep-RL-Methods"> </a>
 </h2>
@@ -217,6 +494,15 @@ window.onload = wrap_img;
 <h3 id="Problem">
 <a class="anchor" href="#Problem" aria-hidden="true"><span class="octicon octicon-link"></span></a>Problem<a class="anchor-link" href="#Problem"> </a>
 </h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Consider the Following optimization problem. Find the shortest path from state $s_0$ to goal $g$,where the edges indicate the cost/distance ?</p>
+<p><img src="/images/copied_from_nb/my_icons/sp.png" alt="" title="Credit: https://nanjiang.cs.illinois.edu/files/cs598/slides_intro_f20.pdf"></p>
+
 </div>
 </div>
 </div>
