@@ -107,7 +107,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      16 min read
+      18 min read
     
 </span></p>
 
@@ -1009,6 +1009,10 @@ sequence length.</p>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><img src="/images/copied_from_nb/my_icons/proof.jpg" alt=""></p>
+<p>Now let's define $v^{*}(s)$ as the maximum expected reward that we can get from state <code>s</code> under <code>any policy</code>. Once we are able to extract these values, optimal policy becomes obvious. <code>Value Iteration</code> methods try to apprimate this $V^{*}(s)$. They start with some arbitrary function like $f(s) = 0 \forall s$ and iteratively bring $f$ closer to $V^{*}$. Let's also define $Q^{\pi}(s,a)$ as the expected reward under the policy $\pi$,when we take action <code>a</code> at state <code>s</code> and sebsequently sample actions according to $\pi$. Similarly $Q^{*}(s,a)$ is also defined as the maximum Q that can be achieved under any policy. We often want $Q^{*}$ values over $V^{*}$ as simply choosing greedily w.r.t $Q^{*}$ gives the optimal policy. To see the advantage more clearly, Imagine an oracle that can give you $V^{*}$ for any <code>s</code>. Now, the agent starts at state <code>s</code> and is looking to take optimal action. It first has to take all possible actions from that state to see where it would end up. And for each subsequent state <code>s'</code> , it has to query the oracle to get $V^{*}(s')$. Only after this we can determine the best action from initial state s as $max_{a\in A}(r_1 + v^{*}(s'))$. But having $Q^{*}$ values let's us choose this action  directly by evaluating $Q_{a\in A}^{*}(s,a)$. There exists a proof that for discounted infinite horizon MDP's there exists a stationary and deterministic optimal policy for all states simultaneously. Let's call this $\pi^{*}$. It is easy to see that both $V^{*}$ and $Q^{*}$ will also satisfy a similar recursive relation called <code>Bellmann Optimality equations</code>.</p>
+<p><img src="/images/copied_from_nb/my_icons/b.jpg" alt=""></p>
+<p>We can also define bellmann operator that let's us concisely reprent the equations. Next.</p>
+<p><img src="/images/copied_from_nb/my_icons/b2.jpg" alt=""></p>
 
 </div>
 </div>
