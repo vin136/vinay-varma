@@ -107,7 +107,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      6 min read
+      14 min read
     
 </span></p>
 
@@ -150,6 +150,7 @@ window.onload = wrap_img;
 <ul>
 <li class="toc-entry toc-h3"><a href="#Train-a-linear-regression-model-using-gradient-descent.">Train a linear regression model using gradient-descent. </a></li>
 <li class="toc-entry toc-h3"><a href="#Adding-Inductive-biases---convolutions-and-recurrent-networks.">Adding Inductive biases - convolutions and recurrent networks. </a></li>
+<li class="toc-entry toc-h3"><a href="#Self-Attention">Self-Attention </a></li>
 </ul>
 </li>
 <li class="toc-entry toc-h2"><a href="#Deep-RL-Methods">Deep RL Methods </a>
@@ -509,6 +510,425 @@ We don't need connections from the inputs far down. <code>Stationarity</code> im
 <p>RNN = linear layer + weight sharing + BPTT(Back-prop through time)</p>
 <p><img src="/images/copied_from_nb/my_icons/rnn.png" alt="" title="Credit:https://atcold.github.io/pytorch-Deep-Learning/en/week06/06-3/"></p>
 <p>RNN's are used for sequence data. In the above figure the <code>arrow</code> indicates matrix multiplication. The hidden state <code>h(t)</code> at time <code>t</code> is equal to Affine_transform(x(t)) + Affine_transform(h(t-1)).(<code>Note</code>: Affine_transform refers to matrix multiplication). The following code will makes it all clear.</p>
+<p>Consider the following sequence :</p>
+<p>'Hey Jude, don't make it bad.</p>
+<p>Take a sad song and make it better.</p>
+<p>Remember to let her into your heart,</p>
+<p>Then you can start to make it better.
+'</p>
+<p>Now we would want to classify it into either positive or negative sentiment. Ideally we would have a collection of such sequences with their corresponding labels. Here note that the number of words in each sequence need not be same. A naive approach would be to string all the words in a sequence to a single column,and run it through a fullyconnected network.(variable sequence length still poses a problem.) Let's see how an RNN can accomplish this with much less parameters.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="k">class</span> <span class="nc">RNN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">i_sz</span><span class="p">,</span><span class="n">h_sz</span><span class="p">,</span><span class="n">out_sz</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_sz</span> <span class="o">=</span> <span class="n">i_sz</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h_sz</span> <span class="o">=</span> <span class="n">h_sz</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_sz</span> <span class="o">=</span> <span class="n">out_sz</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_hidden</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_sz</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">h_sz</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_hidden</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h_sz</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">h_sz</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_output</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h_sz</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">out_sz</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">bs</span><span class="p">,</span><span class="n">seq_len</span><span class="p">,</span><span class="n">emb_sz</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">seq_len</span><span class="p">):</span>
+            <span class="c1"># This just adds the hidden representation which is a function of all the words fed until t-1 to the </span>
+            <span class="c1">#word at t</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">h</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_hidden</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span><span class="n">i</span><span class="p">,:])</span>
+            <span class="c1"># Stores the hidden representation for next  word in seq.</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_hidden</span><span class="p">(</span><span class="n">h</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_output</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+        
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bs</span> <span class="o">=</span> <span class="mi">101</span>
+<span class="n">seq_len</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">vector_len</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">seq_1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span><span class="n">seq_len</span><span class="p">,</span><span class="n">vector_len</span><span class="p">)</span>
+<span class="n">rnn</span> <span class="o">=</span> <span class="n">RNN</span><span class="p">(</span><span class="n">i_sz</span> <span class="o">=</span> <span class="n">vector_len</span><span class="p">,</span><span class="n">h_sz</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span><span class="n">out_sz</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">rnn</span><span class="p">(</span><span class="n">seq_1</span><span class="p">)</span>
+
+<span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>torch.Size([101, 1])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This can be seen as a two layer network.The last layer converts <code>h_sz</code> to the output dimension, while the first layer maps <code>i_sz</code> to <code>h_sz</code>. But, the first layer only uses weight matrices of size 100 <em> 20,20 </em> 20. Totalling of around 2400 parameters. Our naive version would have seq_len <em> i_sz </em> h parameters.(around 20000). Moreover, In RNN number of paramenters is independent of
+sequence length.</p>
+<p>The above model is just an instantiation of <code>weight sharing</code> for sequential data. We haven't still leveraged the <code>locality</code> aspect (<code>sparsity</code>).</p>
+<p>Moreover,eventhough we only have 3 different weight matrices,the actual number of layers is proportional to the <code>size</code> of the <code>for loop</code>. Aside from being very slow and memory intensive, gradients of loss w.r.t initial operations( i = 0) very unlikely to be stable.(According to the chain rule of derivatives the gradient of loss w.r.t first matrix multiplication would involve multiplying atleast <code>seq_len</code> of partial derivatives. The resultant can easily explode or vanish.) What if we only take gradients for the last <code>n</code> operations. This is also called <code>Truncated BPTT</code>. Here's the modified <code>forward</code> function.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">bs</span><span class="p">,</span><span class="n">seq_len</span><span class="p">,</span><span class="n">emb_sz</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">seq_len</span><span class="p">):</span>
+            <span class="c1"># This just adds the hidden representation which is a function of all the words fed until t-1 to the </span>
+            <span class="c1">#word at t</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">h</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_hidden</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span><span class="n">i</span><span class="p">,:])</span>
+            <span class="c1"># Stores the hidden representation for next  word in seq.</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_hidden</span><span class="p">(</span><span class="n">h</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">%</span><span class="k">3</span> == 0:
+                <span class="n">h</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_output</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This just flushes the memory for the backward pass after every 3 steps. Aside from solving obvious practical problems,this also has regularizing effects. We are implicitly encoding our bias - you need not look past the last 3 points in the sequence - a.k.a <code>locality</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Self-Attention">
+<a class="anchor" href="#Self-Attention" aria-hidden="true"><span class="octicon octicon-link"></span></a>Self-Attention<a class="anchor-link" href="#Self-Attention"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Consider a sequence of vectors ($x_1$,$x_2$..$x_n$). It helps to imagine them as vectors corresponding to sequence of words. If you can bear with me,the following operation converts them into another sequence of vectors ($y_1$,$y_2$..$y_n$) of same dimension.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Two column vectors(each with dimension of 3*1)</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.tensor</span> <span class="k">as</span> <span class="nn">tensor</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">1.</span><span class="p">],[</span><span class="mf">2.</span><span class="p">],[</span><span class="mf">3.</span><span class="p">]]),</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">4.</span><span class="p">],[</span><span class="mf">5.</span><span class="p">],[</span><span class="mf">6.</span><span class="p">]]),</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">7.</span><span class="p">],[</span><span class="mf">8.</span><span class="p">],[</span><span class="mf">9.</span><span class="p">]]),</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">10.</span><span class="p">],[</span><span class="mf">11.</span><span class="p">],[</span><span class="mf">12.</span><span class="p">]])],</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># a random matrix</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">X</span><span class="nd">@matrix</span>
+<span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">Y</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(torch.Size([3, 4]), torch.Size([4, 4]), torch.Size([3, 4]))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now,let's generate the same <code>V</code> with a fancier set of operations.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">temp</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="nd">@X</span>
+<span class="n">Y_new</span> <span class="o">=</span> <span class="n">X</span><span class="nd">@temp</span><span class="o">.</span><span class="n">T</span>
+<span class="n">Y_new</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>torch.Size([3, 4])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here <code>temp.T</code> is acting as <code>matrix</code>. This also removes the need for additional initialization. This operation also lends to the following intution:</p>
+<ul>
+<li>
+<code>temp</code> is the dot product of each column vector in U with all the vector within it. The captures the measure of similarity between the vectors.</li>
+<li>
+<p><code>Y_new</code> is just a linear combination of U with the corresponding weights from the <code>temp</code>.</p>
+</li>
+<li>
+<p>In other words, $y_i =\sum_{j} w_{ij}.x_{j}$ where <code>w</code>'s are taken frow the rows of <code>temp</code>.</p>
+</li>
+</ul>
+<p>In the above figure each vector $x_{i}$ is used three times. Let's take $x_{2}$ for illustration:</p>
+<ul>
+<li>To get $w_{22}$</li>
+<li>Similarly to get weight's required for all the other outputs $y_1$,$y_3$ and $y_4$ </li>
+<li>$x_2$ is also used in linear weighting with <code>w</code>'s to get $y_2$</li>
+</ul>
+<p>But, In the whole compution we are not learning any weights. Everything is being generated from the input. We can introduce three different set of <code>x</code>'s for each of the above operations. Let's initialize three square matrices $W_k$,$W_q$,$W_v$, each of size (4,4).</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">w_k</span><span class="p">,</span><span class="n">w_q</span><span class="p">,</span><span class="n">w_v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># learnable parameters</span>
+
+<span class="n">keys</span><span class="p">,</span><span class="n">queries</span><span class="p">,</span><span class="n">values</span> <span class="o">=</span> <span class="n">X</span><span class="nd">@w_k</span><span class="p">,</span><span class="n">X</span><span class="nd">@w_q</span><span class="p">,</span><span class="n">X</span><span class="nd">@w_v</span>
+<span class="c1"># This is the naming convention used in the literature.</span>
+<span class="n">temp</span> <span class="o">=</span> <span class="n">queries</span><span class="o">.</span><span class="n">T</span><span class="nd">@keys</span>
+<span class="n">Y_new</span> <span class="o">=</span><span class="n">values</span><span class="nd">@temp</span><span class="o">.</span><span class="n">T</span>
+<span class="n">Y_new</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>torch.Size([3, 4])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>That's it. <code>Self-attention</code> refers to performing above operations. We additionally normalize the weights in the <code>temp</code> with <code>softmax</code>. Further, We can also use sets of matrices ($W_k$,$W_q$,$W_v$),essentially replicationg self-attention with different weight matrices. The resulting outputs can be concatenated and be passed through a linear layer to get back the orginal dimension.(This is called <code>multi-head attention</code>)</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+
+
+<span class="k">class</span> <span class="nc">SelfAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">feat_sz</span><span class="p">,</span><span class="n">n_heads</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># for n_heads we need the corresponding number of weight matrices of size feat_sz*feat_sz to get new</span>
+        <span class="c1">#set of (keys,queries,values),Computationally this can be fused inside a single linear operation.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heads</span> <span class="o">=</span> <span class="n">n_heads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_keys</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">feat_sz</span><span class="p">,</span><span class="n">feat_sz</span><span class="o">*</span><span class="n">n_heads</span><span class="p">,</span><span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_queries</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">feat_sz</span><span class="p">,</span><span class="n">feat_sz</span><span class="o">*</span><span class="n">n_heads</span><span class="p">,</span><span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_values</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">feat_sz</span><span class="p">,</span><span class="n">feat_sz</span><span class="o">*</span><span class="n">n_heads</span><span class="p">,</span><span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comb_heads</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">n_heads</span><span class="o">*</span><span class="n">feat_sz</span><span class="p">,</span><span class="n">feat_sz</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+        <span class="c1"># typically data is fed with features along the `columns`.</span>
+        <span class="n">bs</span><span class="p">,</span><span class="n">n_seq</span><span class="p">,</span><span class="n">feat_sz</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_keys</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span><span class="n">n_seq</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">heads</span><span class="p">,</span><span class="n">feat_sz</span><span class="p">)</span>
+        <span class="n">queries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_queries</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span><span class="n">n_seq</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">heads</span><span class="p">,</span><span class="n">feat_sz</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_values</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span><span class="n">n_seq</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">heads</span><span class="p">,</span><span class="n">feat_sz</span><span class="p">)</span>
+        <span class="c1"># `torch.bmm` performs matrix multiplication for a given batch.It is efficient to squeeze n_heads along</span>
+        <span class="c1"># with batches and perform the calculation at once.</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="n">keys</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bs</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">heads</span><span class="p">,</span><span class="n">n_seq</span><span class="p">,</span><span class="n">feat_sz</span><span class="p">)</span>
+        <span class="n">queries</span> <span class="o">=</span> <span class="n">queries</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bs</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">heads</span><span class="p">,</span><span class="n">n_seq</span><span class="p">,</span><span class="n">feat_sz</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bs</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">heads</span><span class="p">,</span><span class="n">n_seq</span><span class="p">,</span><span class="n">feat_sz</span><span class="p">)</span>
+        <span class="n">dot</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">bmm</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span><span class="n">keys</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+        <span class="c1">#Rescaling the elements to control the scale</span>
+        <span class="n">dot</span> <span class="o">=</span> <span class="n">dot</span><span class="o">/</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">feat_sz</span><span class="p">)</span>
+        <span class="n">dot</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">dot</span><span class="p">,</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">bmm</span><span class="p">(</span><span class="n">dot</span><span class="p">,</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">heads</span><span class="p">,</span><span class="n">n_seq</span><span class="p">,</span><span class="n">feat_sz</span><span class="p">)</span>
+        <span class="c1">#reshaping</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span><span class="n">n_seq</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">heads</span><span class="o">*</span><span class="n">feat_sz</span><span class="p">)</span>
+        <span class="c1"># passing through a linear layer to combine all the heads</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">comb_heads</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="c1"># gives bs,n_seq,n_heads</span>
+        
+        <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">input_</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># input with features arranged in columns(shape = [1, 4, 3])</span>
+
+<span class="n">sa</span> <span class="o">=</span> <span class="n">SelfAttention</span><span class="p">(</span><span class="n">feat_sz</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">sa</span><span class="p">(</span><span class="n">input_</span><span class="p">)</span><span class="c1"># simple attention</span>
+
+<span class="n">mha</span> <span class="o">=</span> <span class="n">SelfAttention</span><span class="p">(</span><span class="n">feat_sz</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">n_heads</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">Y_6</span> <span class="o">=</span> <span class="n">sa</span><span class="p">(</span><span class="n">input_</span><span class="p">)</span>
+
+<span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">Y_6</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(torch.Size([1, 4, 3]), torch.Size([1, 4, 3]))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p></p>
+<div class="flash">
+    <svg class="octicon octicon-info octicon octicon-info octicon octicon-info octicon octicon-info octicon octicon-info octicon octicon-info" viewbox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M6.3 5.69a.942.942 0 01-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 01-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path></svg>
+    <strong>Note: </strong>Attention is first introduced to deal with sequences in the context of natural language. But, nothing in the above implementation handles <code>order</code>. It just maps a <code>set of vectors</code> to another. To enforce order, we can simply add a <code>position vector</code> to our inputs.
+</div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Above ideas mark the end of the theoretical minimum needed. Below you would find the notched up version of the above content by solving simple but practical problems end-end.</p>
 
 </div>
 </div>
@@ -554,6 +974,16 @@ We don't need connections from the inputs far down. <code>Stationarity</code> im
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Consider the Following optimization problem. Find the shortest path from state $s_0$ to goal $g$,where the edges indicate the cost/distance ?</p>
 <p><img src="/images/copied_from_nb/my_icons/sp.png" alt="" title="Credit: https://nanjiang.cs.illinois.edu/files/cs598/slides_intro_f20.pdf"></p>
+<p>Here taking a greedy approach will fail as actions will have long-term consequences. Solving the above problem efficiently requires realizing that <code>the distance to any node along the shortest path from source to destination is also shortest path</code>. In the above example the shortest path to <code>g</code> should either be through <code>d</code> or <code>f</code>.(one of the incoming edges). Let the shortest distance from a node <code>s</code> to <code>g</code> be given by $v^{*}(s)$. Then the last edge of the shortest path should come from evaluating $v^{*}(f))$ and $v^{*}(d)$, where $v^{*}(f) = 1 + v^{*}(g)$ and $v^{*}(d) = min(3+v^{*}(g),1+v^{*}(f))$. This backtracking or dynamic programming approach of finding one edge at a time is illustrated below.</p>
+<p><img src="/images/copied_from_nb/my_icons/op.png" alt="" title="Credit: https://nanjiang.cs.illinois.edu/files/cs598/slides_intro_f20.pdf"></p>
+<p>Now, for each action we take, let us also add a <code>transition probability</code> that defines the likelihood of ending up in any of the available states given the action. Here, for states <code>c</code> and <code>e</code> we added some randomness. This will let us model more realistic scenarios. Consider an <code>RL agent</code> driving your car. The consequences of any action (eg: Turning the steering to the right given the visual view of the road.) can only be modeled probabilistically.</p>
+<p><img src="/images/copied_from_nb/my_icons/ssp.png" alt="" title="Credit: https://nanjiang.cs.illinois.edu/files/cs598/slides_intro_f20.pdf"></p>
+<p>Here by weighting w.r.t the transition probabilities we can recover $v^{*}()$ for all states. Optimal policy is again achieved by acting greedily w.r.t $v^{*}()$. For example , $v^{*}(c) = min(4+0.3*v^{*}(e)+0.7*v^{*}(d),2+v^{*}(e))$. In RL, we call this <code>Bellmann Equation</code>.</p>
+<p><img src="/images/copied_from_nb/my_icons/sspb.png" alt="" title="Credit: https://nanjiang.cs.illinois.edu/files/cs598/slides_intro_f20.pdf"></p>
+<p><img src="/images/copied_from_nb/my_icons/be.png" alt="" title="Credit: https://nanjiang.cs.illinois.edu/files/cs598/slides_intro_f20.pdf"></p>
+<p>Modern <code>Deep RL</code> deals with solving this stochastic version of the problem when the transition probabilities are not available and the number of possible states is very large. Consider the following video game playing scenario. The pixels on the screen at any timestamp can be taken as <code>state</code>. The game rules provides list of <code>possible actions</code> and the corresponding <code>reward</code>(increase in score).</p>
+<p><img src="/images/copied_from_nb/my_icons/vid.png" alt="" title="Credit: https://nanjiang.cs.illinois.edu/files/cs598/slides_intro_f20.pdf"></p>
+<p>By the end of this module we will develop all the machinery to understand the algorithms that learn optimal(or good) policies for this general case.</p>
 
 </div>
 </div>
