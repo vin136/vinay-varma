@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Lesson learnt while building a Deep Reinforcement learning based automated stock trading service. | Home</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Lesson learnt while building a Deep Reinforcement learning based automated stock trading service." />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="or How We made DeepRL Work in the real world" />
+<meta property="og:description" content="or How We made DeepRL Work in the real world" />
+<link rel="canonical" href="https://vinayvarma.work/research/2021/02/21/What-I-Learned-at-Niveshi.html" />
+<meta property="og:url" content="https://vinayvarma.work/research/2021/02/21/What-I-Learned-at-Niveshi.html" />
+<meta property="og:site_name" content="Home" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-02-21T00:00:00-06:00" />
+<script type="application/ld+json">
+{"headline":"Lesson learnt while building a Deep Reinforcement learning based automated stock trading service.","dateModified":"2021-02-21T00:00:00-06:00","datePublished":"2021-02-21T00:00:00-06:00","description":"or How We made DeepRL Work in the real world","mainEntityOfPage":{"@type":"WebPage","@id":"https://vinayvarma.work/research/2021/02/21/What-I-Learned-at-Niveshi.html"},"@type":"BlogPosting","url":"https://vinayvarma.work/research/2021/02/21/What-I-Learned-at-Niveshi.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://vinayvarma.work/feed.xml" title="Home" /><link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Lesson learnt while building a Deep Reinforcement learning based automated stock trading service. | Home</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Lesson learnt while building a Deep Reinforcement learning based automated stock trading service." />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="or How We made DeepRL Work in the real world" />
+<meta property="og:description" content="or How We made DeepRL Work in the real world" />
+<link rel="canonical" href="https://vinayvarma.work/research/2021/02/21/What-I-Learned-at-Niveshi.html" />
+<meta property="og:url" content="https://vinayvarma.work/research/2021/02/21/What-I-Learned-at-Niveshi.html" />
+<meta property="og:site_name" content="Home" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-02-21T00:00:00-06:00" />
+<script type="application/ld+json">
+{"headline":"Lesson learnt while building a Deep Reinforcement learning based automated stock trading service.","dateModified":"2021-02-21T00:00:00-06:00","datePublished":"2021-02-21T00:00:00-06:00","description":"or How We made DeepRL Work in the real world","mainEntityOfPage":{"@type":"WebPage","@id":"https://vinayvarma.work/research/2021/02/21/What-I-Learned-at-Niveshi.html"},"@type":"BlogPosting","url":"https://vinayvarma.work/research/2021/02/21/What-I-Learned-at-Niveshi.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://vinayvarma.work/feed.xml" title="Home" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Home</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About Me</a><a class="page-link" href="/search/">Search</a><a class="page-link" href="/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Lesson learnt while building a Deep Reinforcement learning based automated stock trading service.</h1><p class="page-description">or How We made DeepRL Work in the real world</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-02-21T00:00:00-06:00" itemprop="datePublished">
+        Feb 21, 2021
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      6 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/categories/#Research">Research</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/vin136/vinay-varma/tree/master/_notebooks/2021-02-21-What-I-Learned-at-Niveshi.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/vin136/vinay-varma/master?filepath=_notebooks%2F2021-02-21-What-I-Learned-at-Niveshi.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/vin136/vinay-varma/blob/master/_notebooks/2021-02-21-What-I-Learned-at-Niveshi.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#Why-not-to-join-in-a-startup-?">Why not to join in a startup ? </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021-02-21-What-I-Learned-at-Niveshi.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As of today, I have been working at <code>Niveshi</code> for nearly two-and-half years. We Started out in late 2018, with nothing but a rough idea and a non-working model at best to automate <code>strategy generation</code> using DeepRL. I will spare other details but I believe we have succeeded in building an automated pipeline from getting raw data to ready-to-deploy startegies. Here I'm logging some lossons learned along the way. These will be useful for folks trying to make research ideas in Artificial Intelligence work in the real world, especially Deep RL. I will take <code>stock trading</code> as a running example,to illustrate some general principles. Some familiarity with RL is assumed.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>Objective</code> : Find statistical regularities in the historical data and identify profitable trading rules. For simplicity let's assume the data includes only historical price and volume. From RL perspective, given a set of time-series features learn to trade profitably. This amounts to outputting appropriate actions at each of the time-stamps,in order to maximize profits.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote>
+<p>Note :Usually techniques are sampled from traditional machine learning,signal processing and statistics. The recipe is as follows - Hire a bunch of smart kids -&gt; Give them the data-&gt; Ask them to make money for the fund -&gt; Incentivize them appropriately. Apart from the laundry list of problems that come with managing people, this approach is quite costly, and doesn't scale well. Markets quickly absorb any obvious edges. Consequently,any successful pattern,however sophisticated,have a short shel-life. DeepRL, if can successfully be employed can replace the <code>hiring and continuously finding sophisticated patterns</code> part.</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The following is the form of notes that I would hope my past self have known when starting out with the problem. Some of these we got it right the first time , while others learned the hardway.But neverthless, here are the lessons.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ol>
+<li>
+<p>Don't Learn from pixels. Please consider adding any auxillary information about the dynamics.State Representation is really important.</p>
+</li>
+<li>
+<p>Reduce the dimensionality of <code>Action</code> and <code>State</code> space.</p>
+<p>Focus on explicitly reducing the noise from the <code>state</code>. If you don't have a good set of minimal features required for the task, which is often the case, focus on building a pipeline to choose relevant features from you global set. Classical techniques may be of little use here, It is worthwhile to see if we can use the orginal task and the model to glean feature importance.</p>
+<p>Here <code>state</code> simply refers to the features fed as input to the network. Theoritically,it seems network should be able to do feature selection and engineering implicitly. But, We have found drastic improvements by reducing noise from the input features before feeding to the network. In stock markets, many patterns found through training data don't generalize. It is intuitive to rely on <code>Occam's Razor</code>- Among two similarly performing strategies, prefer the one that used less features. Many RL algorithms relies on having access to a hashtable storing visitation frequencies and other metrics of the state-space. A neural network acts as a drop-in replacement in modern DeepRL methods with potentially infinite state-spaces. This might also contribute to why the performance is improved by drastically reducing the dimensionality of the state.</p>
+<p>And reducing Action space has more to do with decreasing the complexity of the modeling problem.</p>
+</li>
+<li>
+<p>Don't Fiddle with network-architectures yet.</p>
+<p>When You begin workin on a new problem, Start with the simplest yet bespoke architucture you can find. At the outset,you have too many variables. When we started, apart from some inspiration of watching <code>AlphaGo</code> beating..
+We don't have a reason to believe that it would work. And network architecture is the least important piece of the puzzle.</p>
+</li>
+<li>
+<p>Don't do AutoML
+We have never done blind hyper-parameter search. Imagine working with a peculiar dataset where almost there is no useful published work to rely on for guidance. And you just managed to train the model. How would you go from here and start building confidence on yourself and the model to discover something useful. Based on our understanding of the algorithm and our domain we made hypothesis and tested them by running the experiments. Note that at this point we just managed to fit <code>train</code>.Performance on out of sample is out of question. To give an example, We would spend some time thinking how would changing any particular hyperparameter say <code>gamma</code> or <code>entropy</code> would effect some metrics of the resulting strategies like <code>Average holding time</code>. This would not only develop your understanding of the problem but gives you <code>levers</code> to control various attributes of the <code>strategies</code>.</p>
+<ol>
+<li>Engineering Environment</li>
+</ol>
+</li>
+</ol>
+<ol>
+<li>Reward Engineering</li>
+</ol>
+<ol>
+<li>
+<p>How to deal with less data ?</p>
+<p>signal = amout of data + signal from each data point.</p>
+</li>
+<li>
+<p>Many useful things are not useful in production.
+The advantage of any feature is proportional to differential advantage/(maintenance overload or complexity)</p>
+</li>
+<li>
+<p>Develop checks for checking robustness.</p>
+<p>For other domains it translates to developing techniques of accessing overfitting apart from checking run-on-test.</p>
+</li>
+</ol>
+<ol>
+<li>
+<p>You can use machine learning to understand ML models.</p>
+</li>
+<li>
+<p>No single metric to optimize</p>
+</li>
+<li>
+<p>Carefully Engineer the environment.
+Reward engineering and desigining environment are intimately tied. Eg: Agent got stuck in high portfolio states. For instance if the global trend is up..it learned to get some high portfolio and stay there. Correlation vs causation.</p>
+</li>
+</ol>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Some Philosophical musings</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Why-not-to-join-in-a-startup-?">
+<a class="anchor" href="#Why-not-to-join-in-a-startup-?" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why not to join in a startup ?<a class="anchor-link" href="#Why-not-to-join-in-a-startup-?"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here I'm assuming you are an employee, not the founder.</p>
+<ul>
+<li>
+<p>Lack of proper mentorship. Startups hire just enough people to get things done. And often times you are the only one working on an area. During my time at Niveshi, I was the only machine learning engineer at the company. To grow, you need fast feedback loops. Nothing replaces learning from an experienced mentor.</p>
+</li>
+<li>
+<p>You won't get rich by working at a startup.You will get rich by deploying large sums of capital over multiple startups. Capital is cheaper than time. You can only work in so many startups over your career.Given abysmal success rate, it is stupid to diversify your time this way. Moreover,as an employee you will own 10 to 30 times lower equity than the founders. This is true even if you are the founding engineer of an early stage startup. Considering that you are just starting out your career,your market value is low. You will be paid minimal equity and compensation possible, even if they are generous. A better alternative is to work towards increasing your reputation early in your career. Earn a safety net of Career capital and money by working in big companies. Then,later start your own company or even work at a startup when you are potentially overvalued. Diversifying your bets among several low-risk and high-risk has better return profile than  medium-risk ones.[<a href="https://en.wikipedia.org/wiki/Barbell_strategy">https://en.wikipedia.org/wiki/Barbell_strategy</a>]</p>
+</li>
+<li>
+<p>You will likely learn some bad engineering practices. Believe it or not we managed to get away without having any kind of unittesting. Our code get's pushed only by means of peer review.</p>
+</li>
+<li>
+<p>There are no established practices to deal with common painpoints. Resolving conflict.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="vin136/vinay-varma"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/research/2021/02/21/What-I-Learned-at-Niveshi.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Thoughts on Science and Life.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/vin136" title="vin136"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/vinnuvinay008" title="vinnuvinay008"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
