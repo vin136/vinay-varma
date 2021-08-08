@@ -15,7 +15,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2021-02-21T00:00:00-06:00" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"https://vinayvarma.work/research/2021/02/21/What-I-Learned-at-Niveshi.html"},"description":"or How We made DeepRL Work in the real world","@type":"BlogPosting","url":"https://vinayvarma.work/research/2021/02/21/What-I-Learned-at-Niveshi.html","headline":"Lesson learnt while building a Deep Reinforcement learning based automated stock trading service.","dateModified":"2021-02-21T00:00:00-06:00","datePublished":"2021-02-21T00:00:00-06:00","@context":"https://schema.org"}</script>
+{"description":"or How We made DeepRL Work in the real world","@type":"BlogPosting","url":"https://vinayvarma.work/research/2021/02/21/What-I-Learned-at-Niveshi.html","headline":"Lesson learnt while building a Deep Reinforcement learning based automated stock trading service.","dateModified":"2021-02-21T00:00:00-06:00","datePublished":"2021-02-21T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://vinayvarma.work/research/2021/02/21/What-I-Learned-at-Niveshi.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://vinayvarma.work/feed.xml" title="Home" /><link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>Lesson learnt while building a Deep Reinforcement learning based automated stock trading service. | Home</title>
@@ -30,7 +30,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2021-02-21T00:00:00-06:00" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"https://vinayvarma.work/research/2021/02/21/What-I-Learned-at-Niveshi.html"},"description":"or How We made DeepRL Work in the real world","@type":"BlogPosting","url":"https://vinayvarma.work/research/2021/02/21/What-I-Learned-at-Niveshi.html","headline":"Lesson learnt while building a Deep Reinforcement learning based automated stock trading service.","dateModified":"2021-02-21T00:00:00-06:00","datePublished":"2021-02-21T00:00:00-06:00","@context":"https://schema.org"}</script>
+{"description":"or How We made DeepRL Work in the real world","@type":"BlogPosting","url":"https://vinayvarma.work/research/2021/02/21/What-I-Learned-at-Niveshi.html","headline":"Lesson learnt while building a Deep Reinforcement learning based automated stock trading service.","dateModified":"2021-02-21T00:00:00-06:00","datePublished":"2021-02-21T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://vinayvarma.work/research/2021/02/21/What-I-Learned-at-Niveshi.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 <link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
@@ -184,9 +184,13 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<blockquote>
-<p>Note :Usually techniques are sampled from traditional machine learning,signal processing and statistics. The recipe is as follows - Hire a bunch of smart kids -&gt; Give them the data-&gt; Ask them to make money for the fund -&gt; Incentivize them appropriately. Apart from the laundry list of problems that come with managing people, this approach is quite costly, and doesn't scale well. Markets quickly absorb any obvious edges. Consequently,any successful pattern,however sophisticated,have a short shel-life. DeepRL, if can successfully be employed can replace the <code>hiring and continuously finding sophisticated patterns</code> part.</p>
-</blockquote>
+<p>Usually techniques are sampled from traditional machine learning,signal processing and statistics. The recipe is as follows :</p>
+<ul>
+<li>Hire a bunch of smart folks. </li>
+<li>Give them the data and ask them to make money for the fund.</li>
+<li>Incentivize them appropriately. </li>
+</ul>
+<p>Apart from the laundry list of problems that come with managing people, this approach is quite costly, and doesn't scale well. Markets quickly absorb any obvious edges. Consequently,any successful pattern,however sophisticated, will have a short shelf-life. This keeps the team busy continuosly searching for novel ways to leverage the data and extract profitble stratagies. DeepRL, atleast in theory, promises to automate all this.</p>
 
 </div>
 </div>
@@ -194,7 +198,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The following is the form of notes that I would hope my past self have known when starting out with the problem. Some of these we got it right the first time , while others learned the hardway.But neverthless, here are the lessons.</p>
+<p><strong>Notes to my-self</strong></p>
 
 </div>
 </div>
@@ -202,6 +206,57 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<ol>
+<li>
+<p>How to gaurentee success with Neural Networks ?</p>
+<ul>
+<li>Collect Large , Clean and Varied ( interesting samples,edge cases) data.</li>
+<li>Train a large enough network neural network on it.</li>
+</ul>
+<p>For whatever reason if your problem can't meet the above conditions, get ready for a painful ride.</p>
+</li>
+</ol>
+<ol>
+<li>
+<p>How to deal with less data ?</p>
+<p>signal = (amout of data) * (signal from each data point).</p>
+</li>
+</ol>
+<p>Roughly,the amount of signal provided per data-point follow <code>Self-supervision &gt; Supervised &gt; Reinforcement Learning</code>.</p>
+<ul>
+<li>
+<p>Consider learning the structure of the data before attempting to formulate as the RL problem.</p>
+</li>
+<li>
+<p>Add auxillary losses. These might either fasten learning or can be used as standalone signals to improve the robustness of the base signal.</p>
+</li>
+<li>
+<p>When you are limited by the scale of data, ensemble of simple architectures can beat the effort over novel architectures.</p>
+</li>
+</ul>
+<ol>
+<li>Don't Fiddle with network-architectures yet.</li>
+</ol>
+<p>When You begin workin on a new problem, Start with the simplest yet bespoke architucture you can find. At the outset,you have too many variables to deal with and the <code>network-architecture</code> is the least important of all.
+</p>
+<div class="flash">
+    <svg class="octicon octicon-info octicon octicon-info octicon octicon-info octicon octicon-info octicon octicon-info octicon octicon-info octicon octicon-info" viewbox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M6.3 5.69a.942.942 0 01-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 01-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path></svg>
+    <strong>Note: </strong>Best architecture is not only function of the domain but also the scale of data. The inductive bias of CNN’s and RNN’s might not be necessary or even optimal under the limit of infinite data. This also explains the recent surge in Multi-head Attention based architectures, which are closer to Multi-Layer Perceptrons than CNN’s. These architectures work better with lots of data. Otherwise, you better stick with your CNN’s.
+</div>
+<ol>
+<li>
+<p>Don't do AutoML.</p>
+<p>We have never done blind hyper-parameter search. Imagine working with a peculiar dataset where almost there is no useful published work to start with. And you just managed to train the model. How would you go from here to betting your capital on its outputs ?</p>
+</li>
+</ol>
+<p>Ablation studies and Hypothesis-testing is the way to go.</p>
+<p>Based on our understanding of the algorithm and the domain we made hypotheses and tested them on at a time. Note that at this point we only managed to fit on <code>training data</code>. Performance on out of sample is out of question. To give an example, We have spent inordinate amounts of time thinking and empirically testing out the effects of say changing any particular hyperparameter like <code>gamma</code> or <code>entropy factor</code> would effect some aspect of the resulting strategies like <code>Average holding time</code>. This would not only develop your understanding of the problem but gives you <code>levers</code> to control the specific atttributes of your <code>strategies</code> at the later stage.</p>
+<ol>
+<li>
+<p>Many useful things are not useful in practice.</p>
+<p>In theory any marginal improvement is useful. In practice, marginal improvement cannot be justified at the cost of adding algorithmic/implementation complexity to the system. This throws majority of reasearch papers out-of-the window.</p>
+</li>
+</ol>
 <ol>
 <li>
 <p>Don't Learn from pixels. Please consider adding any auxillary information about the dynamics.State Representation is really important.</p>
@@ -212,31 +267,14 @@ window.onload = wrap_img;
 <p>Here <code>state</code> simply refers to the features fed as input to the network. Theoritically,it seems network should be able to do feature selection and engineering implicitly. But, We have found drastic improvements by reducing noise from the input features before feeding to the network. In stock markets, many patterns found through training data don't generalize. It is intuitive to rely on <code>Occam's Razor</code>- Among two similarly performing strategies, prefer the one that used less features. Many RL algorithms relies on having access to a hashtable storing visitation frequencies and other metrics of the state-space. A neural network acts as a drop-in replacement in modern DeepRL methods with potentially infinite state-spaces. This might also contribute to why the performance is improved by drastically reducing the dimensionality of the state.</p>
 <p>And reducing Action space has more to do with decreasing the complexity of the modeling problem.</p>
 </li>
-<li>
-<p>Don't Fiddle with network-architectures yet.</p>
-<p>When You begin workin on a new problem, Start with the simplest yet bespoke architucture you can find. At the outset,you have too many variables. When we started, apart from some inspiration of watching <code>AlphaGo</code> beating..
-We don't have a reason to believe that it would work. And network architecture is the least important piece of the puzzle.</p>
-</li>
-<li>
-<p>Don't do AutoML
-We have never done blind hyper-parameter search. Imagine working with a peculiar dataset where almost there is no useful published work to rely on for guidance. And you just managed to train the model. How would you go from here and start building confidence on yourself and the model to discover something useful. Based on our understanding of the algorithm and our domain we made hypothesis and tested them by running the experiments. Note that at this point we just managed to fit <code>train</code>.Performance on out of sample is out of question. To give an example, We would spend some time thinking how would changing any particular hyperparameter say <code>gamma</code> or <code>entropy</code> would effect some metrics of the resulting strategies like <code>Average holding time</code>. This would not only develop your understanding of the problem but gives you <code>levers</code> to control various attributes of the <code>strategies</code>.</p>
+</ol>
 <ol>
 <li>Engineering Environment</li>
-</ol>
-</li>
 </ol>
 <ol>
 <li>Reward Engineering</li>
 </ol>
 <ol>
-<li>
-<p>How to deal with less data ?</p>
-<p>signal = amout of data + signal from each data point.</p>
-</li>
-<li>
-<p>Many useful things are not useful in production.
-The advantage of any feature is proportional to differential advantage/(maintenance overload or complexity)</p>
-</li>
 <li>
 <p>Develop checks for checking robustness.</p>
 <p>For other domains it translates to developing techniques of accessing overfitting apart from checking run-on-test.</p>
@@ -266,17 +304,12 @@ Reward engineering and desigining environment are intimately tied. Eg: Agent got
 </h2>
 <ol>
 <li>
-<p>Best architecture is not only function of the domain but also the scale of data. The inductive bias of CNN's and RNN's might not be necessary or even optimal under the limit of infinite data. This also explains the recent surge in MHA based architectures that are close to MLP'S than CNN's.</p>
-</li>
 <li>
 <p>Focus on gathering Large amounts of Clean Data. This should be the first priority.</p>
 </li>
-<li>
-<p>When you are limited by the scale of data, ensemble of simple architectures can beat the effort over novel architectures.</p>
-</li>
-<li>
-<p>Focus on solving the most general instantiation of the problem. This system can later be used as a backbone to specialize.</p>
-</li>
+</ol>
+<ol>
+<li>Focus on solving the most general instantiation of the problem. This system can later be used as a backbone to specialize.</li>
 </ol>
 
 </div>
