@@ -248,10 +248,10 @@
 
   
       ,"page1": {
-          "title": "",
-          "content": "",
-          "url": "https://vinayvarma.work/_pages/about.html",
-          "relUrl": "/_pages/about.html",
+          "title": "About Me",
+          "content": "Bio . I want to build intelligent systems. In past, I’ve automated financial trading using Deep Reinforcement Learning at Niveshi. Currently on a break , studying mathematics and computerscience. Below are some sample posts: . Life : Collected Thoughts | Entreprenuership :Thoughts on Building Things | Intelligent Systems : Deep Reinforcement Learning - Theory | . Links . Twitter . | Github . | LinkedIn . | .",
+          "url": "https://vinayvarma.work/about/",
+          "relUrl": "/about/",
           "date": ""
       }
       
