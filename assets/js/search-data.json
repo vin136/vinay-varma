@@ -248,10 +248,10 @@
 
   
       ,"page1": {
-          "title": "About Me",
+          "title": "",
           "content": "",
-          "url": "https://vinayvarma.work/about/",
-          "relUrl": "/about/",
+          "url": "https://vinayvarma.work/_pages/about.html",
+          "relUrl": "/_pages/about.html",
           "date": ""
       }
       
