@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Linear Algebra - (Chapter 0.1) | Home</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Linear Algebra - (Chapter 0.1)" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Key Ideas" />
+<meta property="og:description" content="Key Ideas" />
+<link rel="canonical" href="https://vinayvarma.work/research/2022/01/10/Linear-Algebra.html" />
+<meta property="og:url" content="https://vinayvarma.work/research/2022/01/10/Linear-Algebra.html" />
+<meta property="og:site_name" content="Home" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-01-10T00:00:00-06:00" />
+<script type="application/ld+json">
+{"description":"Key Ideas","@type":"BlogPosting","url":"https://vinayvarma.work/research/2022/01/10/Linear-Algebra.html","headline":"Linear Algebra - (Chapter 0.1)","dateModified":"2022-01-10T00:00:00-06:00","datePublished":"2022-01-10T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://vinayvarma.work/research/2022/01/10/Linear-Algebra.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://vinayvarma.work/feed.xml" title="Home" /><link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Linear Algebra - (Chapter 0.1) | Home</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Linear Algebra - (Chapter 0.1)" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Key Ideas" />
+<meta property="og:description" content="Key Ideas" />
+<link rel="canonical" href="https://vinayvarma.work/research/2022/01/10/Linear-Algebra.html" />
+<meta property="og:url" content="https://vinayvarma.work/research/2022/01/10/Linear-Algebra.html" />
+<meta property="og:site_name" content="Home" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-01-10T00:00:00-06:00" />
+<script type="application/ld+json">
+{"description":"Key Ideas","@type":"BlogPosting","url":"https://vinayvarma.work/research/2022/01/10/Linear-Algebra.html","headline":"Linear Algebra - (Chapter 0.1)","dateModified":"2022-01-10T00:00:00-06:00","datePublished":"2022-01-10T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://vinayvarma.work/research/2022/01/10/Linear-Algebra.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://vinayvarma.work/feed.xml" title="Home" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Home</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About Me</a><a class="page-link" href="/search/">Search</a><a class="page-link" href="/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Linear Algebra -  (Chapter 0.1)</h1><p class="page-description">Key Ideas</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-01-10T00:00:00-06:00" itemprop="datePublished">
+        Jan 10, 2022
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      3 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/categories/#Research">Research</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/vin136/vinay-varma/tree/master/_notebooks/Linear Algebra.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/vin136/vinay-varma/master?filepath=_notebooks%2FLinear+Algebra.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/vin136/vinay-varma/blob/master/_notebooks/Linear Algebra.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#Central-Objects-:-Vectors-and-linear-maps">Central Objects : Vectors and linear maps </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#Idea-1:-Spanning-Vectors">Idea 1: Spanning Vectors </a></li>
+</ul>
+</li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/Linear Algebra.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p></p>
+<div class="flash">
+    <svg class="octicon octicon-info octicon octicon-info octicon octicon-info octicon octicon-info octicon octicon-info octicon octicon-info octicon octicon-info octicon octicon-info" viewbox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M6.3 5.69a.942.942 0 01-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 01-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path></svg>
+    <strong>Note: </strong>These are not meant to be used for self-teaching the subject. My objective is to collect the summary of all the ideas that a working <code>Machine Learning Researcher</code> should be aware of. Use this as a reference to check or deepen your understanding. At the start of each post I will provide an opinionated learning strategy to teach yourself the subject from scratch in the <strong>shortest possible time</strong>. In most cases the post is based off those resources, thus the credit is due to the orginal authors.
+</div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Pointers to learn from scratch (Go through these resources in the given order.)</strong></p>
+<p>Read and workthrough the first 4 chapters of the book <a href="https://mml-book.github.io/book/mml-book.pdf">mml</a>.</p>
+<p>Watch through this series of videos by 3Blue1Brown - <a href="https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab">Essence of linear algebra</a> along the way.</p>
+<p>For all practical purposes this should suffice. But, I would also suggest to read through <a href="https://linear.axler.net">Linear Algebra Done Right</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Central-Objects-:-Vectors-and-linear-maps">
+<a class="anchor" href="#Central-Objects-:-Vectors-and-linear-maps" aria-hidden="true"><span class="octicon octicon-link"></span></a>Central Objects : Vectors and linear maps<a class="anchor-link" href="#Central-Objects-:-Vectors-and-linear-maps"> </a>
+</h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here we will define the lead actors - vectors(objects of study) and linear maps(mappings between these objects)</p>
+<p>Vector Space : Set of all objects called <strong>vectors</strong> that satisfy some intuitive constraints. Consider the following vector spaces.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="/images/copied_from_nb/my_icons/la2.jpg" alt="" title="Credit:"></p>
+<p>Note the commonality between the following objects. For illustration let's use geometric vectors, that can be seen as pointed arrows within a coordinate axis, represented as a list of numbers.</p>
+<p><img src="/images/copied_from_nb/my_icons/la1.jpg" alt="" title="Credit:"></p>
+<p>All these satisfy some intuitive properties once we define addition and scalar multiplication. Let's call all such objects <strong>Vectors</strong></p>
+<p><img src="/images/copied_from_nb/my_icons/la3.jpg" alt="" title="Credit:"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Linear Algebra studies the emergent properties of objects once we impose simple properties like commutitivity,associativity etc. Note that we are just formalizing the familiar notions. This helps us discover some very interesting properties as we shall see.</p>
+<p>In short, we introduced the notion of <code>vector space</code> which consists of</p>
+<ul>
+<li>A set <code>X</code> of vectors</li>
+<li>
+<p>A set <code>C</code> of scalars</p>
+<p>such that vectors are closed that are closed under addition,subtraction and scalar multiplication and satisfies natural associative and distributive laws.</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Linear Maps</strong></p>
+<p>Linear Maps are the functions that map between the elements of the vector space. But not all mappings, only those that satisfy linearity conditions as outlined below:</p>
+<p><img src="/images/copied_from_nb/my_icons/la4.jpg" alt="" title="Credit:"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now,If you have studied <strong>Linear Algebra</strong>, you might have jumped directly at <strong>geometric vectors</strong> and <strong>matrices</strong>. Below we will take a slightly more abstract approach that will pay dividends when we study arguably the most used decorated area the subject <strong>Matrix Decompositions - SVD and Eigen Value decomposition.</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Idea-1:-Spanning-Vectors">
+<a class="anchor" href="#Idea-1:-Spanning-Vectors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Idea 1: Spanning Vectors<a class="anchor-link" href="#Idea-1:-Spanning-Vectors"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Big Idea 1</strong>: All the elements of a vector space can be represented succintly as a linear combination of few  a <strong>vectors</strong>. In other words,Irrespective of the vector space (geometric vectors,polynomials, functions etc), there exists a set of few vectors that can be used to generate all the elements of that set. This section builds up the material to prove this fact.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Subspace</strong></p>
+<p>There exist a subset of the vector space that also satisfy the properties of the vector space. This will be more clear via examples below.</p>
+<p><img src="/images/copied_from_nb/my_icons/la4.jpg" alt="" title="Credit:"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p></p>
+<div class="flash flash-success">
+    <svg class="octicon octicon-checklist octicon octicon-checklist octicon octicon-checklist" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M16 8.5l-6 6-3-3L8.5 10l1.5 1.5L14.5 7 16 8.5zM5.7 12.2l.8.8H2c-.55 0-1-.45-1-1V3c0-.55.45-1 1-1h7c.55 0 1 .45 1 1v6.5l-.8-.8c-.39-.39-1.03-.39-1.42 0L5.7 10.8a.996.996 0 000 1.41v-.01zM4 4h5V3H4v1zm0 2h5V5H4v1zm0 2h3V7H4v1zM3 9H2v1h1V9zm0-2H2v1h1V7zm0-2H2v1h1V5zm0-2H2v1h1V3z"></path></svg>
+    <strong>Tip: </strong>To check if a set forms a valid <strong>Subspace</strong> check if the elements of the set are closed under a.<code>addition</code> and b.<code>zero</code> element belongs to the set c. closed under scalar multiplication. Rest of the properties(distributivity,associativity etc) are anyways satisfied by definition(as these are subset of the vector space).
+</div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="/images/copied_from_nb/my_icons/la5.jpg" alt="" title="Credit:"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now it is sensible to ask whether by combining two subspaces(UNION,INTERSECTION) can we get another valid subspace. Convince yourself that the <code>INTERSECTION</code> of two subspaces is always a subspace which is not the case for <code>UNION</code>. If we define the notion <code>sum of two subspaces</code> as the collection all elements that can be written as <code>sum of an element from each subspace</code>, we note that this set is also a vector space thus a subspace of the original. Also this is the smallest subspace containing both the subspaces (just like how union of two sets in set theory is the smallest set containing both the sets).</p>
+<p><img src="/images/copied_from_nb/my_icons/la6.jpg" alt="" title="Credit:"></p>
+<p><img src="/images/copied_from_nb/my_icons/la7.jpg" alt="" title="Credit:"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p></p>
+<div class="flash flash-warn">
+    <svg class="octicon octicon-zap octicon octicon-zap octicon octicon-zap octicon octicon-zap" viewbox="0 0 10 16" version="1.1" width="10" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M10 7H6l3-7-9 9h4l-3 7 9-9z"></path></svg>
+    <strong>Important: </strong>Understand the above claims before proceeding.
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="vin136/vinay-varma"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/research/2022/01/10/Linear-Algebra.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Thoughts on Science and Life.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/vin136" target="_blank" title="vin136"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/vinnuvinay008" target="_blank" title="vinnuvinay008"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
