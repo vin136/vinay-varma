@@ -15,7 +15,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2022-01-11T00:00:00-06:00" />
 <script type="application/ld+json">
-{"description":"Key Ideas","@type":"BlogPosting","url":"https://vinayvarma.work/research/2022/01/11/Linear-Algebra.html","headline":"Linear Algebra - (Chapter 0.1)","dateModified":"2022-01-11T00:00:00-06:00","datePublished":"2022-01-11T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://vinayvarma.work/research/2022/01/11/Linear-Algebra.html"},"@context":"https://schema.org"}</script>
+{"description":"Key Ideas","@type":"BlogPosting","headline":"Linear Algebra - (Chapter 0.1)","url":"https://vinayvarma.work/research/2022/01/11/Linear-Algebra.html","datePublished":"2022-01-11T00:00:00-06:00","dateModified":"2022-01-11T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://vinayvarma.work/research/2022/01/11/Linear-Algebra.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://vinayvarma.work/feed.xml" title="Home" /><link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>Linear Algebra - (Chapter 0.1) | Home</title>
@@ -30,7 +30,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2022-01-11T00:00:00-06:00" />
 <script type="application/ld+json">
-{"description":"Key Ideas","@type":"BlogPosting","url":"https://vinayvarma.work/research/2022/01/11/Linear-Algebra.html","headline":"Linear Algebra - (Chapter 0.1)","dateModified":"2022-01-11T00:00:00-06:00","datePublished":"2022-01-11T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://vinayvarma.work/research/2022/01/11/Linear-Algebra.html"},"@context":"https://schema.org"}</script>
+{"description":"Key Ideas","@type":"BlogPosting","headline":"Linear Algebra - (Chapter 0.1)","url":"https://vinayvarma.work/research/2022/01/11/Linear-Algebra.html","datePublished":"2022-01-11T00:00:00-06:00","dateModified":"2022-01-11T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://vinayvarma.work/research/2022/01/11/Linear-Algebra.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 <link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
@@ -107,7 +107,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      10 min read
+      11 min read
     
 </span></p>
 
@@ -156,7 +156,7 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h2"><a href="#Idea-2-:-Linear-Maps-can-be-represented-as-a-Matrix.">Idea 2 : Linear Maps can be represented as a Matrix. </a></li>
 </ul>
 </li>
-<li class="toc-entry toc-h1"><a href="#Better-Representations-:-Change-of-basis,-PCA,-SVM.">Better Representations : Change of basis, PCA, SVM. </a>
+<li class="toc-entry toc-h1"><a href="#Better-Representations-:-Change-of-basis,-PCA,-SVD.">Better Representations : Change of basis, PCA, SVD. </a>
 <ul>
 <li class="toc-entry toc-h2"><a href="#Idea-3-:-Change-of-Basis">Idea 3 : Change of Basis </a></li>
 </ul>
@@ -528,8 +528,8 @@ Set of the minimal number of vectors needed to generate all the elements of the 
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Better-Representations-:-Change-of-basis,-PCA,-SVM.">
-<a class="anchor" href="#Better-Representations-:-Change-of-basis,-PCA,-SVM." aria-hidden="true"><span class="octicon octicon-link"></span></a>Better Representations : Change of basis, PCA, SVM.<a class="anchor-link" href="#Better-Representations-:-Change-of-basis,-PCA,-SVM."> </a>
+<h1 id="Better-Representations-:-Change-of-basis,-PCA,-SVD.">
+<a class="anchor" href="#Better-Representations-:-Change-of-basis,-PCA,-SVD." aria-hidden="true"><span class="octicon octicon-link"></span></a>Better Representations : Change of basis, PCA, SVD.<a class="anchor-link" href="#Better-Representations-:-Change-of-basis,-PCA,-SVD."> </a>
 </h1>
 </div>
 </div>
@@ -573,6 +573,45 @@ Set of the minimal number of vectors needed to generate all the elements of the 
 <p><img src="/images/copied_from_nb/my_icons/la27.jpg" alt=""></p>
 <p><img src="/images/copied_from_nb/my_icons/la25.jpg" alt=""></p>
 <p><img src="/images/copied_from_nb/my_icons/la26.jpg" alt=""></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's walkthrough what we have done above again.</p>
+<ul>
+<li>We realized that a matrix represents a linear map and vice-versa.</li>
+<li>Give points in the basis $v_1$,$v_2$ we can find a linear map that finds new coordinates of those points with the basis $e_1,e_2$. We know how to get this matrix by looking at the effect of the linear map $P$ on the basis set $v_1$,$v_2$.(check the note on matrix multiplication,if this is not clear).</li>
+<li>Now the trick is to get $B$, we can change the basis to $e_1,e_2$ and use the representation of the map under this basis - $A$ and then convert back to new basis,(round tour) to get $B$.</li>
+</ul>
+<p>Befor we proceed, let's understand <strong>linear maps</strong>,this would make our study of <strong>matrix decompositions</strong> more natural.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Linear Maps - Take 2</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We already know the definition of a linear map and the fact that it can be represented by a matrix. Let's build some vocabulary and properties.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Extras</strong></p>
+<p>To further understand the structure of the vector space, below I share some other fun ideas. Some of these are a bit hard to understand and not strictly necessary. You can safely skip.</p>
 
 </div>
 </div>
