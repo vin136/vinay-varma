@@ -107,7 +107,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      13 min read
+      14 min read
     
 </span></p>
 
@@ -625,6 +625,23 @@ $\{x^2, x, 1\}$ ?</p>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Below I show how to get the representation(matrix) corresponding to a linear map when we know it for one basis and asked to get it in another basis. Here we used the symbol $P^{-1}$ to represent the inverse of a mapping. We will later discuss how to derive this from first principles,but the typical highschool algorithm involving <a href="https://en.wikipedia.org/wiki/Invertible_matrix#Methods_of_matrix_inversion">determinants or gaussian elimination</a> should suffice at the moment.</p>
+<p>We already understand that a matrix vector multiplication is nothing but representing the given vector in different bases. To ensure we are completely clear on this, let's do a sample problem.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="/images/copied_from_nb/my_icons/la40.jpg" alt=""></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now let's see the effect of a linear map under the new basis.</p>
 
 </div>
 </div>
@@ -656,7 +673,7 @@ $\{x^2, x, 1\}$ ?</p>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Linear Maps - Take 2</strong></p>
+<p><strong>Linear Maps - Properties</strong></p>
 
 </div>
 </div>
@@ -664,7 +681,24 @@ $\{x^2, x, 1\}$ ?</p>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We already know the definition of a linear map and the fact that it can be represented by a matrix. Let's build some vocabulary and properties.</p>
+<p>We already know the definition of a linear map and the fact that it can be represented by a matrix. And we have also seen how the change of basis effects a given linear map. But why change basis ? How does these ideas help solve problems ? Let's gain insight by solving some problems.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Q1. What is the standard matrix for the transpose map of a 2*2 matrix w.r.t standard basis ?</p>
+<p>Q2. Find the standard matrix of the differentiation map D : P
+3 → P3 with respect to
+the standard basis {1, x, x2
+, x3} ⊂ P3</p>
+<p>Q3. compute the fourth derivative of $x^2e^x + 2xe^x$.</p>
+<p>Below We will see how changing basis is useful sometimes. The key is to see that matrix multiplication is easy for diagonal matrices. Thus if a give linear transformation be converted be done in a basis such that the corresponding matrix is diagnol - we can recursively apply that transformation easily. Will be clear with below examples.</p>
+<p>Q4. Find 10th fibonacci number ?</p>
+<p>Q5. What is the standard matrix for the transpose map of a 2*2 matrix w.r.t Pauli's basis ?</p>
+<p>Q6. Compute $\int x^2e^{3x} dx$ using matrices</p>
 
 </div>
 </div>
