@@ -2,11 +2,11 @@
   
     
         "post0": {
-            "title": "Title",
-            "content": "",
-            "url": "https://vinayvarma.work/2022/01/11/Notes-on-Distributed-Systems.html",
-            "relUrl": "/2022/01/11/Notes-on-Distributed-Systems.html",
-            "date": " • Jan 11, 2022"
+            "title": "Inside Spotify's Recommender system",
+            "content": "For demonstration purposes, I&#39;ll take the liberty of citing a couple of my recent papers, namely the first SignalTrain paper . References . .",
+            "url": "https://vinayvarma.work/reinforcement%20learning/2022/05/23/Recommender-systems.html",
+            "relUrl": "/reinforcement%20learning/2022/05/23/Recommender-systems.html",
+            "date": " • May 23, 2022"
         }
         
     
@@ -306,15 +306,12 @@
   
 
   
-  
-
-  
 
   
   
 
   
-      ,"page11": {
+      ,"page10": {
           "title": "",
           "content": "Sitemap: {{ “sitemap.xml” | absolute_url }} | .",
           "url": "https://vinayvarma.work/robots.txt",
@@ -322,6 +319,9 @@
           "date": ""
       }
       
+  
+
+  
   
 
 }
