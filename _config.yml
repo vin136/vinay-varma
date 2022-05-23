@@ -71,6 +71,11 @@ default_badges:
   github: true
   binder: true
   colab: true
+  
+  
+# options for jekyll-scholar, e.g. change citation style
+scholar:
+  style: physical-review-d
 
 # Everything below here should be left alone. Modifications may break fastpages
 future: true
